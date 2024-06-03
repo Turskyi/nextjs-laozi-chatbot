@@ -16,3 +16,15 @@ Daoism
 Laozi
 hsl
 import 'postcss-load-config' .Config
+Navbar
+lucide
+mt
+lg
+lucide-react
+bg
+md
+py
+Daoist
+py-10
+typescriptreact
+postcss
