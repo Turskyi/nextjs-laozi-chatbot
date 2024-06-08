@@ -20,10 +20,10 @@ export default function Page() {
       <div className="space-y-3">
         <H2>Introduction</H2>
         <p>
-          `Welcome to ${APP_NAME} website. This Privacy Policy explains our
+          Welcome to {APP_NAME} website. This Privacy Policy explains our
           practices regarding the collection, use, and disclosure of information
           that we receive through our website. Our primary goal is to showcase
-          our work and skills while respecting your privacy.`
+          our work and skills while respecting your privacy.
         </p>
         <H2>Information We Collect</H2>
         <p>
@@ -84,8 +84,8 @@ export default function Page() {
         </p>
         <H2>Contact Us</H2>
         <p>
-          If you have any questions about this Privacy Policy, please contact
-          us at info@{DEVELOPER_DOMAIN}.
+          If you have any questions about this Privacy Policy, please contact us
+          at info@{DEVELOPER_DOMAIN}.
         </p>
       </div>
     </section>
