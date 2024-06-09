@@ -1,7 +1,7 @@
 [![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner-direct-single.svg)](https://stand-with-ukraine.pp.ua)
 <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/Turskyi/nextjs-laozi-chatbot">
 
-# Daoizm - Laozi AI Chatbot (Web Version)
+# Daoism - Laozi AI Chatbot (Web Version)
 
 This project is a web-based chatbot application that leverages the wisdom of
 Laozi and Daoist teachings to provide users with guidance and insights. It is
@@ -40,6 +40,11 @@ yarn dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 result.
+
+## Website:
+
+Visit the [Daoism - Laozi AI Chatbot](https://daoizm.online/) to experience the
+interactive chatbot and explore Daoist teachings.
 
 ## Features:
 

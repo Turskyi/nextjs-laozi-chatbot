@@ -33,11 +33,11 @@ export default function Home() {
         </div>
       </section>
       <section className="space-y-3 text-center">
-        <H2>Ask {CHAT_NAME} anything about Daoizm</H2>
+        <H2>Ask {CHAT_NAME} anything about Daoism</H2>
         <p>
           Click the little <Bot className="inline pb-1" /> icon in the top bar
           to activate the AI chat. You can ask the chatbot any question about
-          Daoizm and it will find the relevant info.
+          Daoism and it will find the relevant info.
         </p>
       </section>
     </section>
