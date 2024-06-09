@@ -78,7 +78,7 @@ export default function AIChatBox({ open, onClose }: AIChatBoxProps) {
                 Send a message to start the chat with Laozi AI!
               </p>
               <p>
-                You can ask Laozi Chatbot any question about Daoizm and he will
+                You can ask Laozi Chatbot any question about Daoism and he will
                 find the relevant information.
               </p>
             </div>
