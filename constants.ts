@@ -3,8 +3,9 @@ export const CHAT_NAME = 'Laozi Chatbot';
 export const DOMAIN = 'http://localhost:3000';
 export const DEVELOPER_DOMAIN = 'turskyi.com';
 export const AUTHOR = 'Dmytro Turskyi';
-export const FACEBOOK = 'https://www.facebook.com/LaoziPhilosopher';
+export const GOOGLE_MODEL_NAME = 'gemini-1.5-flash';
 //TODO: replace these links
+export const FACEBOOK = 'https://www.facebook.com/LaoziPhilosopher';
 export const X = 'https://x.com/laozi_daoism';
 export const INSTAGRAM = 'https://www.instagram.com/daoism_daily/';
 export const YOUTUBE =
