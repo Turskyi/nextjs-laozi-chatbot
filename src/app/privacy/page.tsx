@@ -14,7 +14,7 @@ export default function Page() {
   return (
     <section className="space-y-6">
       <div className="space-y-3">
-        <H1>Privacy Policy</H1>
+        <H1>Privacy Policy For &quot;{APP_NAME}&quot; Website</H1>
         <p>Last Updated: {updateDate}</p>
       </div>
       <div className="space-y-3">
@@ -86,7 +86,9 @@ export default function Page() {
         <p>
           If you have any questions about this Privacy Policy, please contact us
           at{' '}
-          <a href="mailto:dmytro.turskyi@gmail.com">dmytro.turskyi@gmail.com</a>
+          <a href={`mailto:support@${DEVELOPER_DOMAIN}`}>
+            support@{DEVELOPER_DOMAIN}
+          </a>
           .
         </p>
       </div>

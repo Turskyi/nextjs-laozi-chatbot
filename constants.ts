@@ -1,7 +1,7 @@
 export const APP_NAME = 'Daoism - Laozi AI';
 export const CHAT_NAME = 'Laozi Chatbot';
 export const DOMAIN = 'http://localhost:3000';
-export const DEVELOPER_DOMAIN = 'turskyi.com';
+export const DEVELOPER_DOMAIN = 'daoizm.online';
 export const AUTHOR = 'Dmytro Turskyi';
 export const GOOGLE_MODEL_NAME = 'gemini-1.5-flash';
 //TODO: replace these links

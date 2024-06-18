@@ -1,10 +1,14 @@
 import { H1 } from '@/components/ui/H1';
 import { H2 } from '@/components/ui/H2';
 import { Metadata } from 'next';
-import { APP_NAME, GOOGLE_MODEL_NAME } from '../../../constants';
+import {
+  APP_NAME,
+  GOOGLE_MODEL_NAME,
+  DEVELOPER_DOMAIN,
+} from '../../../constants';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy Android',
+  title: 'Privacy Policy',
 };
 
 const updateDate = 'June 2024';
@@ -13,13 +17,13 @@ export default function Page() {
   return (
     <section className="space-y-6">
       <div className="space-y-3">
-        <H1>Privacy Policy</H1>
+        <H1>Privacy Policy For &quot;{APP_NAME}&quot; Android App</H1>
         <p>Last Updated: {updateDate}</p>
       </div>
       <div className="space-y-3">
         <H2>Introduction</H2>
         <p>
-          Welcome to the {APP_NAME} mobile application. This Privacy Policy
+          Welcome to the {APP_NAME} Android mobile application. This Privacy Policy
           outlines our practices regarding the collection, use, and disclosure
           of information that we receive through our app. Our primary goal is to
           provide you with an interactive AI experience while respecting your
@@ -65,8 +69,10 @@ export default function Page() {
         <p>
           If you have any questions about this Privacy Policy, please contact us
           at{' '}
-          <a href="mailto:dmytro.turskyi@gmail.com">dmytro.turskyi@gmail.com</a>
-          ..
+          <a href={`mailto:support@${DEVELOPER_DOMAIN}`}>
+            support@{DEVELOPER_DOMAIN}
+          </a>
+          .
         </p>
       </div>
     </section>
