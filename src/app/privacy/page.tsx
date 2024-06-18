@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: 'Privacy Policy',
 };
 
-const updateDate = 'July 2024';
+const updateDate = 'June 2024';
 
 export default function Page() {
   return (
@@ -85,7 +85,9 @@ export default function Page() {
         <H2>Contact Us</H2>
         <p>
           If you have any questions about this Privacy Policy, please contact us
-          at info@{DEVELOPER_DOMAIN}.
+          at{' '}
+          <a href="mailto:dmytro.turskyi@gmail.com">dmytro.turskyi@gmail.com</a>
+          .
         </p>
       </div>
     </section>
