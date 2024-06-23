@@ -1,16 +1,14 @@
 import { H1 } from '@/components/ui/H1';
 import { H2 } from '@/components/ui/H2';
 import { Metadata } from 'next';
-import {
-  APP_NAME,
-  GOOGLE_MODEL_NAME,
-  DEVELOPER_DOMAIN,
-} from '../../../constants';
+import { GOOGLE_MODEL_NAME} from '../../../constants';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
 };
 
+const DEVELOPER_DOMAIN = 'daoizm.online';
+const APP_NAME = 'Daoism - Laozi AI';
 const updateDate = 'June 2024';
 
 export default function Page() {
@@ -23,11 +21,11 @@ export default function Page() {
       <div className="space-y-3">
         <H2>Introduction</H2>
         <p>
-          Welcome to the {APP_NAME} Android mobile application. This Privacy Policy
-          outlines our practices regarding the collection, use, and disclosure
-          of information that we receive through our app. Our primary goal is to
-          provide you with an interactive AI experience while respecting your
-          privacy.
+          Welcome to the {APP_NAME} Android mobile application. This Privacy
+          Policy outlines our practices regarding the collection, use, and
+          disclosure of information that we receive through our app. Our primary
+          goal is to provide you with an interactive AI experience while
+          respecting your privacy.
         </p>
         <H2>Information We Collect</H2>
         <p>

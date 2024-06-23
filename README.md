@@ -9,6 +9,41 @@ built using Next.js, a popular React framework, TypeScript for enhanced type
 safety and maintainability, and bootstrapped with
 [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## Data Storage and Caching
+
+This application utilizes two main technologies for data storage and caching:
+
+- **AstraDB:** We leverage AstraDB, a NoSQL database service from DataStax, to
+  store vector embeddings of text data. These embeddings enable efficient
+  comparison and retrieval of similar information, allowing the AI model to
+  provide relevant responses to user queries. You can learn more about AstraDB
+  at
+  [https://docs.datastax.com/en/astra-db-serverless/index.html](https://docs.datastax.com/en/astra-db-serverless/index.html)
+  .
+- **Please note:** We do not share any sensitive AstraDB credentials in this
+  documentation for security reasons.
+- **Upstash Redis:** Upstash Redis, a managed Redis service, is used to cache
+  responses from the AI model. This caching mechanism significantly improves
+  application performance by avoiding redundant calls to the model for
+  previously generated responses. Upstash Redis stores these cached responses,
+  allowing for faster retrieval when similar user queries are encountered. You
+  can find more information about Upstash Redis at
+  [https://upstash.com/docs/redis/overall/getstarted](https://upstash.com/docs/redis/overall/getstarted)
+  .
+- **Security Note:** Similar to AstraDB, we avoid sharing access credentials
+  for Upstash Redis in this documentation.
+
+## Local Development and Data Reset
+
+When running the application locally, the vector embeddings might be stored in
+a separate AstraDB collection compared to the production environment. This is
+a common practice to isolate development data and prevent conflicts.
+
+To reset the local vector embedding collection during development, you can run
+the command `npm run generate`. This script triggers a process that
+deletes the existing collection in local AstraDB instance and generates a
+new one, by populating it with fresh embeddings.
+
 ## Getting Started
 
 ### 1. Prerequisites:
@@ -27,7 +62,7 @@ git clone https://github.com/Turskyi/nextjs-laozi-chatbot.git
 ```bash
 cd Daoism-Laozi-AI-Web
 npm install  # or yarn install
-npm i langchain @langchain/google-genai ai clsx tailwind-merge ts-node dotenv lucide-react next-themes react-markdown @datastax/astra-db-ts @upstash/redis 
+npm i langchain @langchain/google-genai ai clsx tailwind-merge ts-node dotenv lucide-react next-themes react-markdown @datastax/astra-db-ts @upstash/redis
 ```
 
 ### 4. Run the development server:

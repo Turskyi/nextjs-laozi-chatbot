@@ -4,7 +4,9 @@ import { H2 } from '@/components/ui/H2';
 import { Bot } from 'lucide-react';
 import { Metadata } from 'next';
 import Image from 'next/image';
-import { APP_NAME, CHAT_NAME } from '../../constants';
+
+const APP_NAME = 'Daoism - Laozi AI';
+const CHAT_NAME = 'Laozi Chatbot';
 
 export const metadata: Metadata = {
   title: `${APP_NAME}`,

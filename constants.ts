@@ -4,6 +4,7 @@ export const DOMAIN = 'http://localhost:3000';
 export const DEVELOPER_DOMAIN = 'daoizm.online';
 export const AUTHOR = 'Dmytro Turskyi';
 export const GOOGLE_MODEL_NAME = 'gemini-1.5-flash';
+export const GOOGLE_TEXT_MULTILINGUAL_EMBEDDING_MODEL = 'text-embedding-004';
 //TODO: replace these links
 export const FACEBOOK = 'https://www.facebook.com/LaoziPhilosopher';
 export const X = 'https://x.com/laozi_daoism';
