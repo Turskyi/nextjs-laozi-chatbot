@@ -39,6 +39,8 @@ export async function POST(req: Request) {
       client: Redis.fromEnv(),
     });
 
+    //TODO: replace deprecated signature with `LangChainAdapter.toAIStream()`.
+    // See https://sdk.vercel.ai/providers/adapters/langchain.
     const { stream, handlers } = LangChainStream();
 
     const chatModel = new ChatGoogleGenerativeAI({

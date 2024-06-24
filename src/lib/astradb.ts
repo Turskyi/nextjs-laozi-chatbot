@@ -1,7 +1,7 @@
 import { DataAPIClient } from '@datastax/astra-db-ts';
 import { AstraDBVectorStore } from '@langchain/community/vectorstores/astradb';
 import { GoogleGenerativeAIEmbeddings } from '@langchain/google-genai';
-import { GOOGLE_TEXT_MULTILINGUAL_EMBEDDING_MODEL } from '../../constants';
+import { GOOGLE_TEXT_EMBEDDING_MODEL } from '../../constants';
 
 const endpoint = process.env.ASTRA_DB_ENDPOINT || '';
 const token = process.env.ASTRA_DB_APPLICATION_TOKEN || '';
@@ -17,7 +17,7 @@ if (!token || !endpoint || !collection) {
 export async function getVectorStore() {
   return AstraDBVectorStore.fromExistingIndex(
     new GoogleGenerativeAIEmbeddings({
-      modelName: GOOGLE_TEXT_MULTILINGUAL_EMBEDDING_MODEL,
+      modelName: GOOGLE_TEXT_EMBEDDING_MODEL,
     }),
     {
       token,
@@ -36,7 +36,7 @@ export async function getVectorStore() {
   );
 }
 
-/* We need this function to be able later delete data from database. */
+/** We need this function to be able later delete data from database. */
 export async function getEmbeddingsCollection() {
   // Initialize the client and get a "Db" object
   const client = new DataAPIClient(token);

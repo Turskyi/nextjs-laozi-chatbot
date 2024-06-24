@@ -44,3 +44,8 @@ dotenv
 fs
 flushdb
 pb-1
+yinyang.png
+stringify
+dist
+runnables
+zod
