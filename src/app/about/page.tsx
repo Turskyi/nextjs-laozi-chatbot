@@ -75,12 +75,14 @@ export default function Page() {
           breathing exercises, and various martial arts such as Tai Chi and
           Qigong.
         </p>
-        <Image
-          src={yinyang}
-          alt="An artistic representation of the Daoist concept of Yin and Yang, 
+        <div className="flex justify-center animate-fadeIn">
+          <Image
+            src={yinyang}
+            alt="An artistic representation of the Daoist concept of Yin and Yang, 
           symbolizing balance and harmony."
-          className="rounded-md"
-        />
+            className="aspect-square rounded-full object-cover shadow-inherit transition-transform duration-300 hover:scale-105 dark:border-foreground"
+          />
+        </div>
       </section>
     </section>
   );

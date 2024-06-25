@@ -18,7 +18,10 @@ export default function Home() {
       <section className="grid grid-cols-1 items-center gap-8 sm:grid-cols-2">
         <div className="space-y-3 animate-fadeInUp">
           <H1 className="text-center sm:text-start">
-            Greetings, I am Laozi <span role="img" aria-label="Laozi">老子</span>
+            Greetings, I am Laozi{' '}
+            <span role="img" aria-label="Laozi">
+              老子
+            </span>
           </H1>
           <p className="text-center text-lg sm:text-start">
             As an AI embodiment of the ancient philosopher, I carry the essence
