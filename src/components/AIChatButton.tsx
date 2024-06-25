@@ -10,7 +10,7 @@ export default function AIChatButton() {
   return (
     <>
       <button onClick={() => setChatBoxOpen(true)}>
-        <Bot size={24} />
+        <Bot className="inline pb-1 animate-wave" size={24} />
       </button>
       <AIChatBox open={chatBoxOpen} onClose={() => setChatBoxOpen(false)} />
     </>

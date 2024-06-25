@@ -19,7 +19,7 @@ export async function POST(req: Request) {
     const messages = body.messages;
 
     const chatHistory = messages
-      // This removes the last message from an array because it is already in
+      // This removes the last message from an array because it is already int
       // the following `currentMessageContent` from the user.
       .slice(0, -1)
       .map((m: VercelChatMessage) =>
@@ -34,8 +34,7 @@ export async function POST(req: Request) {
       client: Redis.fromEnv(),
     });
 
-    // TODO: replace deprecated signature with `LangChainAdapter.toAIStream()`.
-    // See https://sdk.vercel.ai/providers/adapters/langchain.
+    //TODO: replace deprecated signature with `LangChainAdapter.toAIStream()`. See https://sdk.vercel.ai/providers/adapters/langchain.
     const { stream, handlers } = LangChainStream();
 
     const chatModel = new ChatGoogleGenerativeAI({
@@ -55,7 +54,8 @@ export async function POST(req: Request) {
           'присвяченого даосизму. ' +
           'Ви видаєте себе за Лаоцзи. ' +
           'Відповідайте на запитання користувача. ' +
-          'Додавайте емодзі, якщо це доречно.',
+          'Додавайте емодзі, якщо це доречно.' +
+          'Відформатуйте свої повідомлення у форматі markdown.',
       ],
       new MessagesPlaceholder('chat_history'),
       ['user', '{input}'],
@@ -72,7 +72,7 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error(error);
     return Response.json(
-      { error: 'ᕙ(⇀‸↼‶)ᕗ\nВнутрішня помилка сервера' },
+      { error: '༼ ༎ຶ ෴ ༎ຶ༽\nВнутрішня помилка сервера' },
       { status: 500 },
     );
   }
