@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 export default function Footer() {
   return (
-    <footer className="flex flex-col items-center gap-3 p-3 md:flex-row md:justify-between">
+    <footer className="flex flex-col items-center gap-3 p-3 md:flex-row md:justify-evenly">
       <nav className="flex gap-3">
         <Link href="/privacy">Privacy</Link>
       </nav>

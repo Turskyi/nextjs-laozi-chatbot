@@ -164,3 +164,8 @@ submit a pull request.
 
 For any questions or feedback, please feel free to create an issue in this
 repository.
+
+## Screenshot:
+
+<!--suppress CheckImageSize -->
+<img src="screenshots/web-home-2024-06-24.png" width="700"  alt="screenshot">
