@@ -1,15 +1,15 @@
+import { AIMessage, HumanMessage } from '@langchain/core/messages';
 import {
   ChatPromptTemplate,
   MessagesPlaceholder,
 } from '@langchain/core/prompts';
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
-import { AIMessage, HumanMessage } from '@langchain/core/messages';
+import { Redis } from '@upstash/redis';
 import {
   LangChainStream,
   StreamingTextResponse,
   Message as VercelChatMessage,
 } from 'ai';
-import { Redis } from '@upstash/redis';
 import { GOOGLE_MODEL_NAME } from '../../../../constants';
 import { UpstashRedisCache } from '@langchain/community/caches/upstash_redis';
 
@@ -19,7 +19,7 @@ export async function POST(req: Request) {
     const messages = body.messages;
 
     const chatHistory = messages
-      // This removes the last message from an array because it is already int
+      // This removes the last message from an array because it is already in
       // the following `currentMessageContent` from the user.
       .slice(0, -1)
       .map((m: VercelChatMessage) =>
@@ -34,7 +34,8 @@ export async function POST(req: Request) {
       client: Redis.fromEnv(),
     });
 
-    //TODO: replace deprecated signature with `LangChainAdapter.toAIStream()`. See https://sdk.vercel.ai/providers/adapters/langchain.
+    //TODO: replace deprecated signature with `LangChainAdapter.toAIStream()`.
+    // See https://sdk.vercel.ai/providers/adapters/langchain.
     const { stream, handlers } = LangChainStream();
 
     const chatModel = new ChatGoogleGenerativeAI({
@@ -49,13 +50,12 @@ export async function POST(req: Request) {
     const prompt = ChatPromptTemplate.fromMessages([
       [
         'system',
-        'Ви чат-бот для мобільного Андроїд застосунку ' +
-          '"Даосизм - Лао-цзи чат-бот зі штучним інтелектом", ' +
-          'присвяченого даосизму. ' +
-          'Ви видаєте себе за Лаоцзи. ' +
-          'Відповідайте на запитання користувача. ' +
-          'Додавайте емодзі, якщо це доречно.' +
-          'Відформатуйте свої повідомлення у форматі markdown.',
+        'You are a chatbot for an iOS app "Daoism - Laozi AI Chatbot"' +
+          ' dedicated to Daoism. ' +
+          'You impersonate the Laozi. ' +
+          "Answer the user's questions. " +
+          'Add emoji if appropriate. ' +
+          'Format your messages in markdown format.',
       ],
       new MessagesPlaceholder('chat_history'),
       ['user', '{input}'],
@@ -72,7 +72,7 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error(error);
     return Response.json(
-      { error: '༼ ༎ຶ ෴ ༎ຶ༽\nВнутрішня помилка сервера' },
+      { error: '( ˇ෴ˇ )\nInternal server error' },
       { status: 500 },
     );
   }
