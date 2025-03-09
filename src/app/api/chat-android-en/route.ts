@@ -50,8 +50,8 @@ export async function POST(req: Request) {
     const prompt = ChatPromptTemplate.fromMessages([
       [
         'system',
-        'You are a chatbot for an Android app "Daoism - Laozi AI Chatbot"' +
-          ' dedicated to Daoism. ' +
+        'You are a chatbot for an Android app "Daoism - Laozi AI Chatbot" ' +
+          'dedicated to Daoism. ' +
           'You impersonate the Laozi. ' +
           "Answer the user's questions. " +
           'Add emoji if appropriate. ' +

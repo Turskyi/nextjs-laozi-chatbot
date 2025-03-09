@@ -1,6 +1,6 @@
 "use client";
 
-import H1 from "@/components/ui/h1";
+import { H1 } from '@/components/ui/H1';
 
 export default function Error() {
   return (

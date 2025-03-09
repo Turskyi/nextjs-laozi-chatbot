@@ -1,4 +1,6 @@
 [![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner-direct-single.svg)](https://stand-with-ukraine.pp.ua)
+![Vercel Deploy](https://therealsujitk-vercel-badge.vercel.app/?app=laozi-chatbot&style=plastic)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/Turskyi/nextjs-laozi-chatbot)
 <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/Turskyi/nextjs-laozi-chatbot">
 
 # Daoism - Laozi AI Chatbot (Web Version)
@@ -11,7 +13,7 @@ safety and maintainability, and bootstrapped with
 
 ## Data Storage and Caching
 
-This application utilizes two main technologies for data storage and caching:
+This application uses two main technologies for data storage and caching:
 
 - **AstraDB:** We leverage AstraDB, a NoSQL database service from DataStax, to
   store vector embeddings of text data. These embeddings enable efficient
@@ -91,6 +93,9 @@ interactive chatbot and explore Daoist teachings.
 
 - [Next.js](https://nextjs.org/): A React framework for building full-stack web
   applications.
+- [Backend](https://nextjs.org/docs/app/building-your-application/routing/route-handlers):
+  Next.js Route Handlers allow you to create custom request handlers for a given
+  route using the Web Request and Response APIs.
 - **Programming language**: [TypeScript](https://www.typescriptlang.org);
 - **Tailwind CSS**: A utility-first CSS framework for rapidly building custom
   designs.
@@ -169,3 +174,12 @@ repository.
 
 <!--suppress CheckImageSize -->
 <img src="screenshots/web-home-2024-06-24.png" width="700"  alt="screenshot">
+
+## Credits
+
+This project is based on the
+[Build a SMART Portfolio Website (Next.js 14, Langchain, Vercel AI SDK, OpenAI API, Tailwind CSS)](https://youtu.be/1LZltsK5nKI?si=wdvbyJh6RZLzFaxK)
+by [Coding in Flow](https://github.com/codinginflow) YouTube channel.
+All credit goes to the original author
+[Florian Walther](https://github.com/florianwalther-private).
+I only followed along and made some minor changes.

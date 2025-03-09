@@ -26,7 +26,7 @@ export async function getVectorStore() {
       collectionOptions: {
         vector: {
           // Max information that can fit in given model, with less dimension
-          // we will loose information.
+          // we will loose information (not use to the fullest).
           dimension: 768,
           // Name of the algorithm of how these dimensions are compared.
           metric: 'cosine',

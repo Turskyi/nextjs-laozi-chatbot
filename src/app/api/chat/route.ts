@@ -13,6 +13,15 @@ import {
 import { GOOGLE_MODEL_NAME } from '../../../../constants';
 import { UpstashRedisCache } from '@langchain/community/caches/upstash_redis';
 
+/**
+ * Handles POST requests to the chat API.
+ *
+ * This implementation is inspired by the following repository:
+ * https://github.com/codinginflow/nextjs-langchain-portfolio/blob/Final-Project/src/app/api/chat/route.ts
+ *
+ * @param {Request} req - The incoming request object.
+ * @returns {Promise<Response>} - The response object.
+ */
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -47,10 +56,13 @@ export async function POST(req: Request) {
       cache,
     });
 
+    // TODO: Review the implementation of the following repository and video to use "context" in the prompt:
+    // https://github.com/codinginflow/nextjs-langchain-portfolio/blob/Final-Project/src/app/api/chat/route.ts
+    // https://youtu.be/1LZltsK5nKI?si=nHXUuxVA5zLF1dFu&t=10209
     const prompt = ChatPromptTemplate.fromMessages([
       [
         'system',
-        'You are a chatbot for an Android app "Daoism - Laozi AI Chatbot"' +
+        'You are a chatbot for an app "Daoism - Laozi AI Chatbot"' +
           ' dedicated to Daoism. ' +
           'You impersonate the Laozi. ' +
           "Answer the user's questions. " +

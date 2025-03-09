@@ -47,7 +47,7 @@ export async function POST(req: Request) {
       modelName: GOOGLE_MODEL_NAME,
       streaming: true,
       callbacks: [handlers],
-      // This logs generated text and prompt to the console.
+      // If `true` this logs generated text and prompt to the console.
       verbose: false,
       cache,
     });
