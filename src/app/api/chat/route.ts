@@ -20,7 +20,6 @@ import { UpstashRedisCache } from '@langchain/community/caches/upstash_redis';
  * https://github.com/codinginflow/nextjs-langchain-portfolio/blob/Final-Project/src/app/api/chat/route.ts
  *
  * @param {Request} req - The incoming request object.
- * @returns {Promise<Response>} - The response object.
  */
 export async function POST(req: Request) {
   try {
@@ -56,7 +55,8 @@ export async function POST(req: Request) {
       cache,
     });
 
-    // TODO: Review the implementation of the following repository and video to use "context" in the prompt:
+    // Even though in the following resources they show that I have to explicitly pass context to the prompt,
+    // it works like this without problems:
     // https://github.com/codinginflow/nextjs-langchain-portfolio/blob/Final-Project/src/app/api/chat/route.ts
     // https://youtu.be/1LZltsK5nKI?si=nHXUuxVA5zLF1dFu&t=10209
     const prompt = ChatPromptTemplate.fromMessages([
