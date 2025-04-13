@@ -15,16 +15,19 @@ export default function Page() {
   return (
     <section className="space-y-6">
       <div className="space-y-3">
-        <H1>Privacy Policy For &quot;{APP_NAME}&quot; Website</H1>
+        <H1>
+          Privacy Policy for &quot;{APP_NAME}&quot; Website and Mobile App
+        </H1>
         <p>Last Updated: {updateDate}</p>
       </div>
       <div className="space-y-3">
         <H2>Introduction</H2>
         <p>
-          Welcome to {APP_NAME} website. This Privacy Policy explains our
-          practices regarding the collection, use, and disclosure of information
-          that we receive through our website. Our primary goal is to showcase
-          our work and skills while respecting your privacy.
+          Welcome to the {APP_NAME} website and mobile application. This Privacy
+          Policy explains our practices regarding the collection, use, and
+          disclosure of information we receive through both our website and our
+          mobile apps. Our primary goal is to provide a thoughtful experience
+          while respecting your privacy.
         </p>
         <H2>Information We Collect</H2>
         <p>
@@ -46,6 +49,14 @@ export default function Page() {
           If we provide an option for you to contact us via email or a contact
           form, any information you provide is voluntary and used solely to
           respond to your inquiries.
+        </p>
+        <H3>3. Mobile App Usage Data</H3>
+        <p>
+          Our mobile app does not require you to create an account or provide
+          any personal information. However, anonymous usage data such as device
+          type, OS version, and general interaction patterns may be collected
+          through third-party services (e.g., Apple, Google Play, or crash
+          reporting tools) to help us improve the app.
         </p>
         <H2>Use of Information</H2>
         <p>The information we collect is used in the following ways:</p>
