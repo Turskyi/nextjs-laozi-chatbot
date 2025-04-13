@@ -7,6 +7,9 @@ export default function Footer() {
       <nav className="flex gap-3">
         <Link href="/privacy">Privacy</Link>
       </nav>
+      <nav className="flex gap-3">
+        <Link href="/support">Support</Link>
+      </nav>
       <div className="flex flex-col items-center md:flex-row md:items-center">
         <span className="footer-title">
           Download the Daoism - Laozi AI Chatbot® App

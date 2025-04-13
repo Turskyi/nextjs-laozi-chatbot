@@ -24,10 +24,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${inter.className} flex flex-col min-h-screen`}>
         <ThemeProvider attribute="class">
           <Navbar />
-          <main className="max-w-3xl mx-auto py-10 px-3">{children}</main>
+          <main className="flex-grow max-w-3xl mx-auto py-10 px-3">
+            {children}
+          </main>
           <Footer />
         </ThemeProvider>
       </body>

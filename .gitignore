@@ -38,4 +38,3 @@ next-env.d.ts
 # files with environment variables
 .env
 .idea
-/.idea/
