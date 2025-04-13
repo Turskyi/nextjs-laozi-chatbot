@@ -15,19 +15,18 @@ export async function POST(request: NextRequest) {
       subject: subject,
       text: message,
     });
-    
+
     await resend.emails.send({
       from: `Do Not Reply ${APP_NAME} <no-reply@${RESEND_DOMAIN}>`,
       to: [email],
       subject: `Thank You! Your Support Message Has Been Sent to ${APP_NAME}`,
-      text: `
-        Thank you for reaching out to us! 
-        Your support message has been received and will be reviewed promptly. 
-        We appreciate your feedback and will get back to you soon.
-
-        Best regards,
-        The ${APP_NAME} Team.
-      `.trim(),
+      text:
+        'Thank you for reaching out to us!\n' +
+        'Your support message has been received and will be reviewed ' +
+        'promptly.\n' +
+        'We appreciate your feedback and will get back to you soon.\n\n' +
+        'Best regards,\n' +
+        `The ${APP_NAME} Team.`,
     });
     return Response.json(data);
   } catch (error) {
