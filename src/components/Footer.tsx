@@ -26,6 +26,18 @@ export default function Footer() {
             height={80}
           />
         </a>
+        <a
+          href="https://apps.apple.com/app/id6743682937"
+          target="_blank"
+          style={{ marginLeft: 10 }}
+        >
+          <Image
+            src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83"
+            alt="Download on the App Store"
+            width={200}
+            height={48}
+          />
+        </a>
       </div>
     </footer>
   );
