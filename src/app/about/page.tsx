@@ -16,7 +16,7 @@ export default function Page() {
       <section className="space-y-3">
         <H2>Welcome to Daoizm.online!</H2>
         <p>
-          Daoizm.online is a website dedicated to exploring the wisdom of Daoism
+          daoizm.online is a website dedicated to exploring the wisdom of Daoism
           and the teachings of Laozi. Through this platform, you can interact
           with an AI representation of Laozi, ask questions about Daoist
           philosophy, and gain insights into the profound teachings of the Tao

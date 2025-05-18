@@ -1,6 +1,7 @@
 [![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner-direct-single.svg)](https://stand-with-ukraine.pp.ua)
 ![Vercel Deploy](https://therealsujitk-vercel-badge.vercel.app/?app=laozi-chatbot&style=plastic)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/Turskyi/nextjs-laozi-chatbot)
+[![wakatime](https://wakatime.com/badge/user/f9df5074-b4ea-4c17-b001-fff428ab82aa/project/f0ebddc4-8710-4281-967c-ffdc3055cf85.svg)](https://wakatime.com/badge/user/f9df5074-b4ea-4c17-b001-fff428ab82aa/project/f0ebddc4-8710-4281-967c-ffdc3055cf85)
 <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/Turskyi/nextjs-laozi-chatbot">
 
 # Daoism - Laozi AI Chatbot (Web Version)
@@ -174,6 +175,23 @@ repository.
 
 <!--suppress CheckImageSize -->
 <img src="screenshots/web-home-2024-06-24.png" width="700"  alt="screenshot">
+
+## Links & Resources
+
+- **Main Website:** [daoizm.online](https://daoizm.online/)  
+  _(Note: This domain may expire in the future. For a permanent alternative, use
+  [laozi-chatbot.vercel.app](https://laozi-chatbot.vercel.app))_
+- **Project Board:**
+  [GitHub Project Board](https://github.com/users/Turskyi/projects/17)
+- **Mobile Apps:**
+  - [Android (Google Play)](https://play.google.com/store/apps/details?id=com.turskyi.laozi_ai)
+  - [iOS (App Store)](https://apps.apple.com/ca/app/daoism-laozi-ai/id6743682937)
+  - [Mobile App Source Code (Flutter)](https://github.com/Turskyi/flutter_laozi_ai)
+- **Web Versions:**
+  - [Web version (Vercel, permanent)](https://laozi-chatbot.vercel.app)
+  - [Web version (Firebase, Flutter-based)](https://laozi-ai.web.app)
+- **Developer:** Dmytro Turskyi ([turskyi.com](https://turskyi.com))  
+  _Single developer and maintainer of this project._
 
 ## Credits
 

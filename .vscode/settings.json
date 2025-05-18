@@ -18,5 +18,13 @@
     "jsonc",
     "typescript",
     "typescriptreact"
-  ]
+  ],
+  "spellright.parserByClass": {
+    "Log": {
+      "parser": "code"
+    },
+    "dart": {
+      "parser": "code"
+    }
+  }
 }
