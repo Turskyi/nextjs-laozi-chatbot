@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { APP_NAME } from '../../constants';
 
 export default function Footer() {
   return (
@@ -11,8 +12,15 @@ export default function Footer() {
         <Link href="/support">Support</Link>
       </nav>
       <div className="flex flex-col items-center md:flex-row md:items-center">
-        <span className="footer-title">
-          Download the Daoism - Laozi AI® App
+        <span
+          style={{
+            fontWeight: 'bold',
+            fontSize: '1.1rem',
+            letterSpacing: '0.02em',
+            color: 'inherit',
+          }}
+        >
+          Download the {APP_NAME}® App
         </span>
         <a
           href="https://play.google.com/store/apps/details?id=com.turskyi.laozi_ai"
