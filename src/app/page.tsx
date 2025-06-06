@@ -16,7 +16,7 @@ export default function Home() {
   const { open, setOpen } = useChatBox();
   return (
     <>
-      <section className="space-y-16 bg-cover bg-center bg-no-repeat px-4 py-32 dark:bg-[url('/dark.png')] bg-[url('/background.png')]">
+      <section className="space-y-16 bg-cover bg-center bg-no-repeat px-4 py-12 sm:py-12 lg:py-32 dark:bg-[url('/dark.png')] bg-[url('/background.png')]">
         <section className="grid grid-cols-1 items-center gap-8 sm:grid-cols-2">
           <div className="space-y-3 animate-fadeInUp">
             <H1 className="text-center sm:text-start">
