@@ -29,9 +29,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class">
           <ChatBoxProvider>
             <Navbar />
-            <main className="flex-grow max-w-3xl mx-auto py-10 px-3">
-              {children}
-            </main>
+            <main className="flex-grow max-w-3xl mx-auto">{children}</main>
           </ChatBoxProvider>
           <Footer />
         </ThemeProvider>
