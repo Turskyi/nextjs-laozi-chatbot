@@ -3,7 +3,7 @@ export const CHAT_NAME = 'Laozi Chatbot';
 export const DOMAIN = 'http://localhost:3000';
 export const DEVELOPER_DOMAIN = 'daoizm.online';
 export const AUTHOR = 'Dmytro Turskyi';
-export const GOOGLE_MODEL_NAME = 'gemini-1.5-flash';
+export const GOOGLE_MODEL_NAME = 'gemini-2.5-flash';
 export const GOOGLE_TEXT_EMBEDDING_MODEL = 'text-embedding-004';
 export const RESEND_DOMAIN = 'kima.website';
 //TODO: replace these links
