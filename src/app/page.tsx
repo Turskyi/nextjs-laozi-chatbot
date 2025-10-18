@@ -9,7 +9,6 @@ import { Metadata } from 'next';
 import Image from 'next/image';
 import { useState } from 'react';
 
-const APP_NAME = 'Daoism - Laozi AI';
 const CHAT_NAME = 'Laozi Chatbot';
 
 export default function Home() {

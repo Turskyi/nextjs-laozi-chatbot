@@ -6,19 +6,18 @@ import { Redis } from '@upstash/redis';
 import { DirectoryLoader } from 'langchain/document_loaders/fs/directory';
 import { TextLoader } from 'langchain/document_loaders/fs/text';
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
-import { getEmbeddingsCollection, getVectorStore } from '../src/lib/astradb';
+import {
+  getEmbeddingsCollection,
+  getGoogleVectorStore,
+  getOpenAiVectorStore,
+} from '../src/lib/astradb';
 
 async function generateEmbeddings() {
   // When we generate new vector embeddings we also want to clear the cache,
   // because the information on the website might have changed.
   await Redis.fromEnv().flushdb();
 
-  const vectorStore = await getVectorStore();
-  // It is important to call `await getVectorStore` before
-  // `getEmbeddingsCollection`, because `getVectorStore` internally initializes
-  // this collection if it does not already exist.
-  (await getEmbeddingsCollection()).deleteMany({});
-
+  // Prepare data once
   const loader = new DirectoryLoader(
     'src/app/',
     {
@@ -55,18 +54,33 @@ async function generateEmbeddings() {
         // Remove empty lines.
         .replace(/^\s*[\r]/gm, '')
         .trim();
-
-      return {
-        pageContent: pageContentTrimmed,
-        metadata: { url },
-      };
+      return { pageContent: pageContentTrimmed, metadata: { url } };
     });
 
   const splitter = RecursiveCharacterTextSplitter.fromLanguage('html');
-
   const splitDocs = await splitter.splitDocuments(docs);
 
-  await vectorStore.addDocuments(splitDocs);
+  // Try Google first, fallback to OpenAI.
+  try {
+    console.log('Generating embeddings using Google...');
+    const googleVectorStore = await getGoogleVectorStore();
+    // It is important to call `await getGoogleVectorStore` before
+    // `getEmbeddingsCollection`, because `getGoogleVectorStore` internally
+    // initializes this collection if it does not already exist.
+    (await getEmbeddingsCollection()).deleteMany({});
+    await googleVectorStore.addDocuments(splitDocs);
+    console.log('✅ Google embeddings generated successfully.');
+  } catch (error) {
+    console.error('❌ Google embedding generation failed:', error);
+    console.log('⚙️ Falling back to OpenAI...');
+    const openAiVectorStore = await getOpenAiVectorStore();
+    // It is important to call `await getOpenAiVectorStore` before
+    // `getEmbeddingsCollection`, because `getOpenAiVectorStore` internally
+    // initializes this collection if it does not already exist.
+    (await getEmbeddingsCollection()).deleteMany({});
+    await openAiVectorStore.addDocuments(splitDocs);
+    console.log('✅ OpenAI embeddings generated successfully.');
+  }
 }
 
 generateEmbeddings();

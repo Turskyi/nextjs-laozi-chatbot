@@ -1,76 +1,42 @@
-import {
-  ChatPromptTemplate,
-  MessagesPlaceholder,
-} from '@langchain/core/prompts';
-import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
-import { AIMessage, HumanMessage } from '@langchain/core/messages';
-import {
-  LangChainStream,
-  StreamingTextResponse,
-  Message as VercelChatMessage,
-} from 'ai';
-import { Redis } from '@upstash/redis';
-import { GOOGLE_MODEL_NAME } from '../../../../constants';
-import { UpstashRedisCache } from '@langchain/community/caches/upstash_redis';
+import { LangChainStream, StreamingTextResponse } from 'ai';
+import { MODEL_PROVIDERS } from '../../../../constants';
+import { createChatResponse } from '@/lib/createChatResponse';
+
+// Define the system prompt as a constant to avoid repetition.
+const SYSTEM_PROMPT =
+  'Ви чат-бот для мобільного iOS застосунку "Даосизм - Лао-цзи чат-бот зі штучним інтелектом", присвяченого даосизму. Ви видаєте себе за Лаоцзи. Відповідайте на запитання користувача. Додавайте емодзі, якщо це доречно. Відформатуйте свої повідомлення у форматі markdown.';
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const messages = body.messages;
-
-    const chatHistory = messages
-      // This removes the last message from an array because it is already int
-      // the following `currentMessageContent` from the user.
-      .slice(0, -1)
-      .map((m: VercelChatMessage) =>
-        m.role === 'user'
-          ? new HumanMessage(m.content)
-          : new AIMessage(m.content),
-      );
-
-    const currentMessageContent = messages[messages.length - 1].content;
-
-    const cache = new UpstashRedisCache({
-      client: Redis.fromEnv(),
-    });
-
-    //TODO: replace deprecated signature with `LangChainAdapter.toAIStream()`. See https://sdk.vercel.ai/providers/adapters/langchain.
     const { stream, handlers } = LangChainStream();
 
-    const chatModel = new ChatGoogleGenerativeAI({
-      modelName: GOOGLE_MODEL_NAME,
-      streaming: true,
-      callbacks: [handlers],
-      // This logs generated text and prompt to the console.
-      verbose: false,
-      cache,
-    });
-
-    const prompt = ChatPromptTemplate.fromMessages([
-      [
-        'system',
-        'Ви чат-бот для мобільного айос застосунку ' +
-          '"Даосизм - Лао-цзи чат-бот зі штучним інтелектом", ' +
-          'присвяченого даосизму. ' +
-          'Ви видаєте себе за Лаоцзи. ' +
-          'Відповідайте на запитання користувача. ' +
-          'Додавайте емодзі, якщо це доречно.' +
-          'Відформатуйте свої повідомлення у форматі markdown.',
-      ],
-      new MessagesPlaceholder('chat_history'),
-      ['user', '{input}'],
-    ]);
-
-    const chain = prompt.pipe(chatModel);
-
-    chain.invoke({
-      input: currentMessageContent,
-      chat_history: chatHistory,
-    });
+    try {
+      // Attempt to create a chat response with the primary model provider.
+      await createChatResponse({
+        modelProvider: MODEL_PROVIDERS.GOOGLE,
+        body,
+        handlers,
+        systemPrompt: SYSTEM_PROMPT,
+      });
+    } catch (error) {
+      // If the primary provider fails, fall back to the secondary provider.
+      console.warn(
+        'Primary model provider failed, falling back to secondary:',
+        error,
+      );
+      await createChatResponse({
+        modelProvider: MODEL_PROVIDERS.OPENAI,
+        body,
+        handlers,
+        systemPrompt: SYSTEM_PROMPT,
+      });
+    }
 
     return new StreamingTextResponse(stream);
   } catch (error) {
-    console.error(error);
+    // Log the error for debugging purposes and return a user-friendly error message.
+    console.error('An unexpected error occurred:', error);
     return Response.json(
       { error: '༼ ༎ຶ ෴ ༎ຶ༽\nВнутрішня помилка сервера' },
       { status: 500 },

@@ -1,7 +1,8 @@
 import { DataAPIClient } from '@datastax/astra-db-ts';
 import { AstraDBVectorStore } from '@langchain/community/vectorstores/astradb';
 import { GoogleGenerativeAIEmbeddings } from '@langchain/google-genai';
-import { GOOGLE_TEXT_EMBEDDING_MODEL } from '../../constants';
+import { OpenAIEmbeddings } from '@langchain/openai';
+import { TEXT_EMBEDDING_MODELS } from '../../constants';
 
 const endpoint = process.env.ASTRA_DB_ENDPOINT || '';
 const token = process.env.ASTRA_DB_APPLICATION_TOKEN || '';
@@ -14,10 +15,10 @@ if (!token || !endpoint || !collection) {
   );
 }
 
-export async function getVectorStore() {
+export async function getGoogleVectorStore() {
   return AstraDBVectorStore.fromExistingIndex(
     new GoogleGenerativeAIEmbeddings({
-      modelName: GOOGLE_TEXT_EMBEDDING_MODEL,
+      modelName: TEXT_EMBEDDING_MODELS.GOOGLE,
     }),
     {
       token,
@@ -29,6 +30,25 @@ export async function getVectorStore() {
           // we will loose information (not use to the fullest).
           dimension: 768,
           // Name of the algorithm of how these dimensions are compared.
+          metric: 'cosine',
+        },
+      },
+    },
+  );
+}
+
+export async function getOpenAiVectorStore() {
+  return AstraDBVectorStore.fromExistingIndex(
+    new OpenAIEmbeddings({
+      modelName: TEXT_EMBEDDING_MODELS.OPENAI,
+    }),
+    {
+      token,
+      endpoint,
+      collection,
+      collectionOptions: {
+        vector: {
+          dimension: 1536,
           metric: 'cosine',
         },
       },

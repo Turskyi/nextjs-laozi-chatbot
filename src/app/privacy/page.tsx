@@ -2,13 +2,12 @@ import { H1 } from '@/components/ui/H1';
 import { H2 } from '@/components/ui/H2';
 import { H3 } from '@/components/ui/H3';
 import { Metadata } from 'next';
+import { APP_NAME, DOMAIN } from '../../../constants';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
 };
 
-const DEVELOPER_DOMAIN = 'daoizm.online';
-const APP_NAME = 'Daoism - Laozi AI';
 const updateDate = 'June 2024';
 
 export default function Page() {
@@ -97,11 +96,7 @@ export default function Page() {
         <H2>Contact Us</H2>
         <p>
           If you have any questions about this Privacy Policy, please contact us
-          at{' '}
-          <a href={`mailto:support@${DEVELOPER_DOMAIN}`}>
-            support@{DEVELOPER_DOMAIN}
-          </a>
-          .
+          at <a href={`mailto:support@${DOMAIN}`}>support@{DOMAIN}</a>.
         </p>
       </div>
     </section>

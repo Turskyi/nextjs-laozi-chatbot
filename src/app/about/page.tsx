@@ -3,6 +3,7 @@ import { H1 } from '@/components/ui/H1';
 import { H2 } from '@/components/ui/H2';
 import { Metadata } from 'next';
 import Image from 'next/image';
+import { DOMAIN } from '../../../constants';
 
 export const metadata: Metadata = {
   title: 'About Daoism and Laozi Chatbot',
@@ -16,11 +17,10 @@ export default function Page() {
       <section className="space-y-3">
         <H2>Welcome to Daoizm.online!</H2>
         <p>
-          daoizm.online is a website dedicated to exploring the wisdom of Daoism
-          and the teachings of Laozi. Through this platform, you can interact
-          with an AI representation of Laozi, ask questions about Daoist
-          philosophy, and gain insights into the profound teachings of the Tao
-          Te Ching.
+          {DOMAIN} is a website dedicated to exploring the wisdom of Daoism and
+          the teachings of Laozi. Through this platform, you can interact with
+          an AI representation of Laozi, ask questions about Daoist philosophy,
+          and gain insights into the profound teachings of the Tao Te Ching.
         </p>
         <p>
           Laozi, the legendary founder of Daoism, authored the Tao Te Ching, a

@@ -4,13 +4,19 @@ import { Bot, SendHorizontal, Trash, XCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
+import { API_ENDPOINTS, ROLES } from '../../constants';
 
 interface AIChatBoxProps {
   open: boolean;
   onClose: () => void;
+  apiEndpoint?: string;
 }
 
-export default function AIChatBox({ open, onClose }: AIChatBoxProps) {
+export default function AIChatBox({
+  open,
+  onClose,
+  apiEndpoint = API_ENDPOINTS.CHAT_WEB_EN,
+}: AIChatBoxProps) {
   const {
     messages,
     input,
@@ -19,7 +25,7 @@ export default function AIChatBox({ open, onClose }: AIChatBoxProps) {
     setMessages,
     isLoading,
     error,
-  } = useChat({ api: 'api/chat-web-en' });
+  } = useChat({ api: apiEndpoint });
 
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -57,7 +63,7 @@ export default function AIChatBox({ open, onClose }: AIChatBoxProps) {
             <ChatMessage
               message={{
                 id: 'loading',
-                role: 'assistant',
+                role: ROLES.ASSISTANT,
                 content: 'Thinking...',
               }}
             />
@@ -66,7 +72,7 @@ export default function AIChatBox({ open, onClose }: AIChatBoxProps) {
             <ChatMessage
               message={{
                 id: 'error',
-                role: 'assistant',
+                role: ROLES.ASSISTANT,
                 content: 'Something went wrong. Please try again!',
               }}
             />
@@ -119,7 +125,7 @@ interface ChatMessageProps {
 }
 
 function ChatMessage({ message: { role, content } }: ChatMessageProps) {
-  const isAiMessage = role === 'assistant';
+  const isAiMessage = role === ROLES.ASSISTANT;
 
   return (
     <div

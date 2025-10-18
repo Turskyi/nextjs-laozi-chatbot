@@ -6,7 +6,7 @@ import { sendSupportEmail } from './actions';
 import FormSubmitButton from '@/components/FormSubmitButton';
 import { H1 } from '@/components/ui/H1';
 import { H2 } from '@/components/ui/H2';
-import { DEVELOPER_DOMAIN } from '../../../constants';
+import { DOMAIN } from '../../../constants';
 
 export default function Support() {
   const [isPending, setIsPending] = useState(false);
@@ -72,10 +72,10 @@ export default function Support() {
         <p>
           You can also reach us directly at{' '}
           <a
-            href={`mailto:support@${DEVELOPER_DOMAIN}`}
+            href={`mailto:support@${DOMAIN}`}
             className="text-primary underline"
           >
-            support@{DEVELOPER_DOMAIN}
+            support@{DOMAIN}
           </a>
           .
         </p>
