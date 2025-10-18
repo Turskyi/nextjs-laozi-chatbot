@@ -1,7 +1,7 @@
 import { H1 } from '@/components/ui/H1';
 import { H2 } from '@/components/ui/H2';
 import { Metadata } from 'next';
-import { GOOGLE_MODEL_NAME} from '../../../constants';
+import { AI_MODEL_NAMES } from '../../../constants';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
@@ -32,7 +32,7 @@ export default function Page() {
           The app does not collect any personal data from users. No account
           creation is required, and we do not track users or collect personal
           data. The only information used is the user&apos;s input, which is
-          sent to the {GOOGLE_MODEL_NAME} model to generate responses. The
+          sent to the {AI_MODEL_NAMES.GOOGLE} model to generate responses. The
           specifics of how the model processes this data are not disclosed to
           us.
         </p>
