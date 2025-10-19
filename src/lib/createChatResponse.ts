@@ -33,6 +33,7 @@ export async function createChatResponse({
   systemPrompt: string;
   useRetrieval?: boolean;
 }) {
+  console.log('--- createChatResponse start ---');
   const messages = body.messages;
 
   const chatHistory = messages
@@ -47,7 +48,9 @@ export async function createChatResponse({
 
   const currentMessageContent = messages[messages.length - 1].content;
 
+  console.log('Creating UpstashRedisCache...');
   const cache = new UpstashRedisCache({ client: Redis.fromEnv() });
+  console.log('UpstashRedisCache created.');
 
   // This logs generated text and prompt to the console.
   const isVerboseLoggingEnabled = false;
@@ -57,6 +60,7 @@ export async function createChatResponse({
       ? ChatGoogleGenerativeAI
       : ChatOpenAI;
 
+  console.log(`Initializing ${ChatModelClass.name}...`);
   const chatModel = new ChatModelClass({
     modelName:
       modelProvider === MODEL_PROVIDERS.GOOGLE
@@ -67,7 +71,9 @@ export async function createChatResponse({
     verbose: isVerboseLoggingEnabled,
     cache,
   });
+  console.log(`${ChatModelClass.name} initialized.`);
 
+  console.log(`Initializing rephrasing model...`);
   const rephrasingModel = new ChatModelClass({
     modelName:
       modelProvider === MODEL_PROVIDERS.GOOGLE
@@ -76,14 +82,32 @@ export async function createChatResponse({
     verbose: isVerboseLoggingEnabled,
     cache,
   });
+  console.log(`Rephrasing model initialized.`);
 
   if (useRetrieval) {
+    console.log('--- Retrieval-augmented chat start ---');
+    console.log(`Getting retriever for ${modelProvider}...`);
     // Retrieval-augmented chat logic (for web version)
     const retriever =
       modelProvider === MODEL_PROVIDERS.GOOGLE
         ? // Gets vector store to retrieve documents.
-          (await getGoogleVectorStore()).asRetriever()
-        : (await getOpenAiVectorStore()).asRetriever();
+          (
+            await (async () => {
+              console.log('Getting GoogleVectorStore...');
+              const store = await getGoogleVectorStore();
+              console.log('GoogleVectorStore obtained.');
+              return store;
+            })()
+          ).asRetriever()
+        : (
+            await (async () => {
+              console.log('Getting OpenAiVectorStore...');
+              const store = await getOpenAiVectorStore();
+              console.log('OpenAiVectorStore obtained.');
+              return store;
+            })()
+          ).asRetriever();
+    console.log('Retriever obtained.');
 
     const rephrasePrompt = ChatPromptTemplate.fromMessages([
       new MessagesPlaceholder('chat_history'),
@@ -94,6 +118,7 @@ export async function createChatResponse({
       ],
     ]);
 
+    console.log('Creating history-aware retriever chain...');
     // It is responsible for taking the chat history and putting it into the
     // prompt bellow.
     const historyAwareRetrieverChain = await createHistoryAwareRetriever({
@@ -101,6 +126,7 @@ export async function createChatResponse({
       retriever,
       rephrasePrompt,
     });
+    console.log('History-aware retriever chain created.');
 
     const prompt = ChatPromptTemplate.fromMessages([
       [ROLES.SYSTEM, `${systemPrompt}\n\nContext:\n{context}`],
@@ -108,6 +134,7 @@ export async function createChatResponse({
       [ROLES.USER, '{input}'],
     ]);
 
+    console.log('Creating stuff documents chain...');
     // This responsible for taking documents and putting them into the
     // `context` field.
     const combineDocsChain = await createStuffDocumentsChain({
@@ -118,7 +145,9 @@ export async function createChatResponse({
       ),
       documentSeparator: '\n--------\n',
     });
+    console.log('Stuff documents chain created.');
 
+    console.log('Creating retrieval chain...');
     // This retrieval will take a user's input, turn it into a vector,
     // then it will do a similarity search in the vector database and find
     // documents that are similar to the user's input.
@@ -126,12 +155,17 @@ export async function createChatResponse({
       combineDocsChain,
       retriever: historyAwareRetrieverChain,
     });
+    console.log('Retrieval chain created.');
 
+    console.log('Invoking retrieval chain...');
     await retrievalChain.invoke({
       input: currentMessageContent,
       chat_history: chatHistory,
     });
+    console.log('Retrieval chain invoked.');
+    console.log('--- Retrieval-augmented chat end ---');
   } else {
+    console.log('--- Simple chat start ---');
     // If no retrieval is needed, run a simple prompt chain
     const prompt = ChatPromptTemplate.fromMessages([
       [ROLES.SYSTEM, systemPrompt],
@@ -141,9 +175,13 @@ export async function createChatResponse({
 
     const chain = prompt.pipe(chatModel);
 
+    console.log('Invoking simple chain...');
     await chain.invoke({
       input: currentMessageContent,
       chat_history: chatHistory,
     });
+    console.log('Simple chain invoked.');
+    console.log('--- Simple chat end ---');
   }
+  console.log('--- createChatResponse end ---');
 }

@@ -14,9 +14,21 @@ const SYSTEM_PROMPT_UA =
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const messages = body.messages;
+    console.log(body);
 
     const { stream, handlers } = LangChainStream();
+
+    /**
+     * Determines whether to use retrieval-augmented generation (RAG).
+     *
+     * When `true`, the chatbot will fetch and include contextual information
+     * from the website’s vector database to provide more informed and
+     * content-aware responses.
+     *
+     * When `false`, the chatbot will respond purely based on the model’s
+     * built-in knowledge without referencing stored website content.
+     */
+    const useRetrieval = false;
 
     try {
       await createChatResponse({
@@ -24,15 +36,16 @@ export async function POST(req: Request) {
         body,
         handlers,
         systemPrompt: SYSTEM_PROMPT_UA,
-        useRetrieval: false,
+        useRetrieval: useRetrieval,
       });
-    } catch {
+    } catch (error) {
+      console.error('Google model error:', error);
       await createChatResponse({
         modelProvider: MODEL_PROVIDERS.OPENAI,
         body,
         handlers,
         systemPrompt: SYSTEM_PROMPT_UA,
-        useRetrieval: false,
+        useRetrieval: useRetrieval,
       });
     }
 

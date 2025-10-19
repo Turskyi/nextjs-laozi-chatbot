@@ -67,3 +67,5 @@ gpt
 instanceof
 tiktoken
 faq
+svgr
+webpack
