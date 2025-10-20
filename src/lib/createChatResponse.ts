@@ -175,11 +175,26 @@ export async function createChatResponse({
 
     const chain = prompt.pipe(chatModel);
 
-    console.log('Invoking simple chain stream...');
-    for await (const _ of await chain.stream({
-      input: currentMessageContent,
-      chat_history: chatHistory,
-    })) {
+    if (modelProvider === MODEL_PROVIDERS.GOOGLE) {
+      console.log('Invoking simple chain with google...');
+      await Promise.race([
+        chain.invoke({
+          input: currentMessageContent,
+          chat_history: chatHistory,
+        }),
+        new Promise((_, reject) =>
+          setTimeout(
+            () => reject(new Error('Google AI timeout after 10s')),
+            10000,
+          ),
+        ),
+      ]);
+    } else {
+      console.log('Invoking simple chain with openai...');
+      await chain.invoke({
+        input: currentMessageContent,
+        chat_history: chatHistory,
+      });
     }
     console.log('Simple chain invoked.');
     console.log('--- Simple chat end ---');
