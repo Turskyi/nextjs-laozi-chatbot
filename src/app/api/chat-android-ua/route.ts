@@ -28,7 +28,7 @@ export async function POST(req: Request) {
      * When `false`, the chatbot will respond purely based on the model’s
      * built-in knowledge without referencing stored website content.
      */
-    const useRetrieval = true;
+    const useRetrieval = false;
 
     try {
       await createChatResponse({
