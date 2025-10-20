@@ -206,8 +206,14 @@ export async function createChatResponse({
           chat_history: chatHistory,
         });
       }
+    } else {
+      console.log('Invoking simple chain with openai...');
+      await chain.invoke({
+        input: currentMessageContent,
+        chat_history: chatHistory,
+      });
     }
-    
+
     console.log('Simple chain invoked.');
     console.log('--- Simple chat end ---');
   }

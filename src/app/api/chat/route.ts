@@ -1,18 +1,7 @@
-import { AIMessage, HumanMessage } from '@langchain/core/messages';
-import {
-  ChatPromptTemplate,
-  MessagesPlaceholder,
-} from '@langchain/core/prompts';
-import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
-import { Redis } from '@upstash/redis';
-import {
-  LangChainStream,
-  StreamingTextResponse,
-  Message as VercelChatMessage,
-} from 'ai';
+export const runtime = 'edge';
+export const preferredRegion = 'auto';
+import { LangChainStream, StreamingTextResponse } from 'ai';
 
-import { UpstashRedisCache } from '@langchain/community/caches/upstash_redis';
-import { AI_MODEL_NAMES } from '../../../../constants';
 import { MODEL_PROVIDERS } from '../../../../constants';
 import { createChatResponse } from '@/lib/createChatResponse';
 

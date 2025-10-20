@@ -1,5 +1,6 @@
+export const runtime = 'edge';
+export const preferredRegion = 'auto';
 import { LangChainStream, StreamingTextResponse } from 'ai';
-
 import { MODEL_PROVIDERS } from '../../../../constants';
 import { createChatResponse } from '@/lib/createChatResponse';
 
