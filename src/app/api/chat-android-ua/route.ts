@@ -4,6 +4,8 @@ import { LangChainStream, StreamingTextResponse } from 'ai';
 import { ROLES, MODEL_PROVIDERS } from '../../../../constants';
 import { createChatResponse } from '@/lib/createChatResponse';
 
+const isDebug = false;
+
 const SYSTEM_PROMPT_UA =
   'Ви чат-бот для мобільного Андроїд застосунку ' +
   '"Даосизм - Лао-цзи чат-бот зі штучним інтелектом", ' +
@@ -14,9 +16,10 @@ const SYSTEM_PROMPT_UA =
   'Відформатуйте свої повідомлення у форматі markdown.';
 
 export async function POST(req: Request) {
+  let body;
   try {
-    const body = await req.json();
-    console.log(body);
+    body = await req.json();
+    if (isDebug) console.log(body);
 
     const { stream, handlers } = LangChainStream();
 
@@ -42,6 +45,16 @@ export async function POST(req: Request) {
       });
     } catch (error) {
       console.error('Google model error:', error);
+      if (body) {
+        // The second parameter (null) is a replacer function (not used here).
+        // The third parameter (2) specifies the number of spaces for
+        // indentation,
+        // making the JSON output readable.
+        console.error(
+          'Request body that caused error:',
+          JSON.stringify(body, null, 2),
+        );
+      }
       await createChatResponse({
         modelProvider: MODEL_PROVIDERS.OPENAI,
         body,
@@ -54,6 +67,15 @@ export async function POST(req: Request) {
     return new StreamingTextResponse(stream);
   } catch (error) {
     console.error(error);
+    if (body) {
+      // The second parameter (null) is a replacer function (not used here).
+      // The third parameter (2) specifies the number of spaces for indentation,
+      // making the JSON output readable.
+      console.error(
+        'Request body that caused error:',
+        JSON.stringify(body, null, 2),
+      );
+    }
     return Response.json(
       { error: '༼ ༎ຶ ෴ ༎ຶ༽\nВнутрішня помилка сервера' },
       { status: 500 },
