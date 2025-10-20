@@ -177,25 +177,37 @@ export async function createChatResponse({
 
     if (modelProvider === MODEL_PROVIDERS.GOOGLE) {
       console.log('Invoking simple chain with google...');
-      await Promise.race([
-        chain.invoke({
+      try {
+        await Promise.race([
+          chain.invoke({
+            input: currentMessageContent,
+            chat_history: chatHistory,
+          }),
+          new Promise((_, reject) =>
+            setTimeout(
+              () => reject(new Error('Google AI timeout after 8s')),
+              8000,
+            ),
+          ),
+        ]);
+      } catch (error) {
+        console.warn('Google AI timeout, falling back to OpenAI...');
+        // Fallback to OpenAI directly inside createChatResponse
+        const openAiChatModel = new ChatOpenAI({
+          modelName: AI_MODEL_NAMES.OPENAI,
+          streaming: true,
+          callbacks: [handlers],
+          verbose: false,
+          cache,
+        });
+        const chain = prompt.pipe(openAiChatModel);
+        await chain.invoke({
           input: currentMessageContent,
           chat_history: chatHistory,
-        }),
-        new Promise((_, reject) =>
-          setTimeout(
-            () => reject(new Error('Google AI timeout after 10s')),
-            10000,
-          ),
-        ),
-      ]);
-    } else {
-      console.log('Invoking simple chain with openai...');
-      await chain.invoke({
-        input: currentMessageContent,
-        chat_history: chatHistory,
-      });
+        });
+      }
     }
+    
     console.log('Simple chain invoked.');
     console.log('--- Simple chat end ---');
   }
