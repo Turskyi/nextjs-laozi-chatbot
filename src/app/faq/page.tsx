@@ -130,6 +130,21 @@ export default function FAQPage() {
           conversational responses.
         </p>
       </section>
+      <section className="mt-12">
+        <h2 className="text-2xl font-semibold mb-4">
+          Why did I get an error or timeout after waiting?
+        </h2>
+        <p className="mb-4">
+          Occasionally, Laozi AI may return an error or stop responding after
+          about 10 seconds. This happens because the system is designed to
+          emulate natural human conversation - not lengthy computations.
+        </p>
+        <p className="mb-4">
+          If this occurs, try simplifying your question or rephrasing it. This
+          helps keep the dialogue flowing smoothly and ensures the AI can
+          respond effectively.
+        </p>
+      </section>
     </main>
   );
 }
