@@ -145,6 +145,22 @@ export default function FAQPage() {
           respond effectively.
         </p>
       </section>
+      <section className="mt-12">
+        <h2 className="text-2xl font-semibold mb-4">
+          Are my conversations saved?
+        </h2>
+        <p className="mb-4">
+          No, the app doesn’t currently save your past chat sessions. This is a
+          complex feature to build, and there are no immediate plans to add it.
+        </p>
+        <p>
+          On the positive side, this ensures that every conversation is
+          completely private. You can ask anything you like, and there’s
+          absolutely no way for me (or anyone else) to see or store your chats.
+          This offers a level of freedom and anonymity that isn’t possible with
+          apps that require accounts to sync conversations.
+        </p>
+      </section>
     </main>
   );
 }
