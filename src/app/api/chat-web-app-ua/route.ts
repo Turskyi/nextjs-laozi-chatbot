@@ -1,16 +1,54 @@
 export const runtime = 'edge';
 export const preferredRegion = 'auto';
 import { LangChainStream, StreamingTextResponse } from 'ai';
-import { MODEL_PROVIDERS, ROLES, WEBSITE } from '../../../../constants';
+import { MODEL_PROVIDERS, WEBSITE } from '../../../../constants';
 import { createChatResponse } from '@/lib/createChatResponse';
+
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+
+/**
+ * Handles CORS preflight for the endpoint.
+ */
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 204,
+    headers: CORS_HEADERS,
+  });
+}
 
 /**
  * Handles POST requests for Ukrainian web app chat endpoint.
  * Uses Google as primary provider and OpenAI as fallback.
  */
 export async function POST(req: Request) {
-  const body = await req.json();
+  // Parse body defensively - some clients (or preflight requests) may not send a JSON body.
+  let body: any = null;
+  try {
+    body = await req
+      .clone()
+      .json()
+      .catch(() => null);
+  } catch (e) {
+    body = null;
+  }
+
   const { stream, handlers } = LangChainStream();
+
+  /**
+   * Determines whether to use retrieval-augmented generation (RAG).
+   *
+   * When `true`, the chatbot will fetch and include contextual information
+   * from the website’s vector database to provide more informed and
+   * content-aware responses.
+   *
+   * When `false`, the chatbot will respond purely based on the model’s
+   * built-in knowledge without referencing stored website content.
+   */
+  const useRetrieval = true;
 
   const systemPrompt =
     'Ви чат-бот для веб-застосунку ' +
@@ -29,7 +67,7 @@ export async function POST(req: Request) {
       body,
       handlers,
       systemPrompt,
-      useRetrieval: true,
+      useRetrieval: useRetrieval,
     });
   } catch (error) {
     console.error('Google model error:', error);
@@ -39,22 +77,19 @@ export async function POST(req: Request) {
         body,
         handlers,
         systemPrompt,
-        useRetrieval: true,
+        useRetrieval: useRetrieval,
       });
     } catch (fallbackError) {
       console.error('OpenAI fallback error ☠︎:', fallbackError);
-      return Response.json(
-        { error: '( ˇ෴ˇ )\nВнутрішня помилка сервера ☠︎︎' },
-        { status: 500 },
+      return new Response(
+        JSON.stringify({ error: '( ˇ෴ˇ )\nВнутрішня помилка сервера ☠︎︎' }),
+        {
+          status: 500,
+          headers: { 'Content-Type': 'application/json', ...CORS_HEADERS },
+        },
       );
     }
   }
 
-  const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST',
-    'Access-Control-Allow-Headers': 'Content-Type',
-  };
-
-  return new StreamingTextResponse(stream, { headers: corsHeaders });
+  return new StreamingTextResponse(stream, { headers: CORS_HEADERS });
 }
