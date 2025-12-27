@@ -45,3 +45,9 @@ export const TEXT_EMBEDDING_MODELS = {
   GOOGLE: 'text-embedding-004',
   OPENAI: 'text-embedding-3-small',
 } as const;
+
+export const LOCALES = {
+  ENGLISH: 'en',
+  UKRAINIAN: 'uk',
+  LATVIAN: 'lv',
+} as const;
