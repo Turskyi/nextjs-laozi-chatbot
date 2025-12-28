@@ -6,17 +6,17 @@ import {
   PromptTemplate,
 } from '@langchain/core/prompts';
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
-import { Redis } from '@upstash/redis';
+// import { Redis } from '@upstash/redis';
 import { Message as VercelChatMessage } from 'ai';
 import { createStuffDocumentsChain } from 'langchain/chains/combine_documents';
 import { createHistoryAwareRetriever } from 'langchain/chains/history_aware_retriever';
 import { createRetrievalChain } from 'langchain/chains/retrieval';
 
-import { UpstashRedisCache } from '@langchain/community/caches/upstash_redis';
+// import { UpstashRedisCache } from '@langchain/community/caches/upstash_redis';
 import { ChatOpenAI } from '@langchain/openai';
 import { AI_MODEL_NAMES, ROLES, MODEL_PROVIDERS } from '../../constants';
 
-const isDebug = false;
+const isDebug = true;
 
 /**
  * Universal chat response generator for all app variants (web, Android, iOS).
@@ -50,12 +50,12 @@ export async function createChatResponse({
 
   const currentMessageContent = messages[messages.length - 1].content;
 
-  if (isDebug) console.log('Creating UpstashRedisCache...');
-  const cache = new UpstashRedisCache({ client: Redis.fromEnv() });
-  if (isDebug) console.log('UpstashRedisCache created.');
+  // if (isDebug) console.log('Creating UpstashRedisCache...');
+  // const cache = new UpstashRedisCache({ client: Redis.fromEnv() });
+  // if (isDebug) console.log('UpstashRedisCache created.');
 
   // This logs generated text and prompt to the console.
-  const isVerboseLoggingEnabled = false;
+  const isVerboseLoggingEnabled = true;
 
   const ChatModelClass =
     modelProvider === MODEL_PROVIDERS.GOOGLE
@@ -71,7 +71,7 @@ export async function createChatResponse({
     streaming: true,
     callbacks: [handlers],
     verbose: isVerboseLoggingEnabled,
-    cache,
+    // cache,
   });
   if (isDebug) console.log(`${ChatModelClass.name} initialized.`);
 
@@ -82,7 +82,7 @@ export async function createChatResponse({
         ? AI_MODEL_NAMES.GOOGLE
         : AI_MODEL_NAMES.OPENAI,
     verbose: isVerboseLoggingEnabled,
-    cache,
+    // cache,
   });
   if (isDebug) console.log(`Rephrasing model initialized.`);
 
@@ -208,7 +208,7 @@ export async function createChatResponse({
           streaming: true,
           callbacks: [handlers],
           verbose: true,
-          cache,
+          // cache,
         });
         const chain = prompt.pipe(openAiChatModel);
         await chain.invoke({
