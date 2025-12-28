@@ -33,29 +33,38 @@ export async function POST(req: Request) {
      */
     const useRetrieval = true;
 
-    try {
-      // Attempt to create a chat response with the primary model provider.
-      await createChatResponse({
-        modelProvider: MODEL_PROVIDERS.GOOGLE,
-        body,
-        handlers,
-        systemPrompt: SYSTEM_PROMPT,
-        useRetrieval: useRetrieval,
-      });
-    } catch (error) {
-      // If the primary provider fails, fall back to the secondary provider.
-      console.warn(
-        'Primary model provider failed, falling back to secondary:',
-        error,
-      );
-      await createChatResponse({
-        modelProvider: MODEL_PROVIDERS.OPENAI,
-        body,
-        handlers,
-        systemPrompt: SYSTEM_PROMPT,
-        useRetrieval: USE_RETRIEVAL_FALLBACK,
-      });
-    }
+    // Start the chat response generation asynchronously.
+    // We do not await this to ensure the stream is returned immediately,
+    // avoiding Vercel timeouts for the initial response.
+    (async () => {
+      try {
+        // Attempt to create a chat response with the primary model provider.
+        await createChatResponse({
+          modelProvider: MODEL_PROVIDERS.GOOGLE,
+          body,
+          handlers,
+          systemPrompt: SYSTEM_PROMPT,
+          useRetrieval: useRetrieval,
+        });
+      } catch (error) {
+        // If the primary provider fails, fall back to the secondary provider.
+        console.warn(
+          'Primary model provider failed, falling back to secondary:',
+          error,
+        );
+        try {
+          await createChatResponse({
+            modelProvider: MODEL_PROVIDERS.OPENAI,
+            body,
+            handlers,
+            systemPrompt: SYSTEM_PROMPT,
+            useRetrieval: USE_RETRIEVAL_FALLBACK,
+          });
+        } catch (fallbackError) {
+          console.error('Fallback model failed:', fallbackError);
+        }
+      }
+    })();
 
     return new StreamingTextResponse(stream);
   } catch (error) {
