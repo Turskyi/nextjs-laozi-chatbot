@@ -1,4 +1,6 @@
-export const runtime = 'edge';
+export const runtime = 'nodejs';
+export const maxDuration = 60;
+export const dynamic = 'force-dynamic';
 export const preferredRegion = 'auto';
 import { LangChainStream, StreamingTextResponse } from 'ai';
 import { MODEL_PROVIDERS, USE_RETRIEVAL_FALLBACK } from '../../../../constants';
