@@ -36,6 +36,8 @@ export async function POST(req: Request) {
     body = null;
   }
 
+  //TODO: replace deprecated signature with `LangChainAdapter.toAIStream()`.
+  // See https://sdk.vercel.ai/providers/adapters/langchain.
   const { stream, handlers } = LangChainStream();
 
   /**

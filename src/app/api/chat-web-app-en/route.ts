@@ -8,6 +8,22 @@ import {
 } from '../../../../constants';
 import { createChatResponse } from '@/lib/createChatResponse';
 
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+
+/**
+ * Handles CORS preflight for the endpoint.
+ */
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 204,
+    headers: CORS_HEADERS,
+  });
+}
+
 const SYSTEM_PROMPT_WEB_EN =
   'You are a chatbot for a web application ' +
   WEBSITE +
@@ -18,8 +34,21 @@ const SYSTEM_PROMPT_WEB_EN =
   'Whenever it makes sense, provide links to pages that contain more information about the topic from the given context. ' +
   'Format your messages in markdown format.';
 
+/**
+ * Handles POST requests for English web app chat endpoint.
+ * Uses Google as primary provider and OpenAI as fallback.
+ */
 export async function POST(req: Request) {
-  const body = await req.json();
+  // Parse body defensively - some clients (or preflight requests) may not send a JSON body.
+  let body: any = null;
+  try {
+    body = await req
+      .clone()
+      .json()
+      .catch(() => null);
+  } catch (e) {
+    body = null;
+  }
 
   //TODO: replace deprecated signature with `LangChainAdapter.toAIStream()`.
   // See https://sdk.vercel.ai/providers/adapters/langchain.
@@ -61,15 +90,16 @@ export async function POST(req: Request) {
         });
       } catch (fallbackError) {
         console.error('OpenAI fallback error ☠︎:', fallbackError);
+        return new Response(
+          JSON.stringify({ error: '( ˇ෴ˇ )\nВнутрішня помилка сервера ☠︎︎' }),
+          {
+            status: 500,
+            headers: { 'Content-Type': 'application/json', ...CORS_HEADERS },
+          },
+        );
       }
     }
   })();
 
-  const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST',
-    'Access-Control-Allow-Headers': 'Content-Type',
-  };
-
-  return new StreamingTextResponse(stream, { headers: corsHeaders });
+  return new StreamingTextResponse(stream, { headers: CORS_HEADERS });
 }
