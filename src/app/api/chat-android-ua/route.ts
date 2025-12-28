@@ -20,7 +20,8 @@ export async function POST(req: Request) {
   try {
     body = await req.json();
     if (isDebug) console.log(body);
-
+    //TODO: replace deprecated signature with `LangChainAdapter.toAIStream()`.
+    // See https://sdk.vercel.ai/providers/adapters/langchain.
     const { stream, handlers } = LangChainStream();
 
     /**
@@ -33,7 +34,7 @@ export async function POST(req: Request) {
      * When `false`, the chatbot will respond purely based on the model’s
      * built-in knowledge without referencing stored website content.
      */
-    const useRetrieval = false;
+    const useRetrieval = true;
 
     try {
       await createChatResponse({

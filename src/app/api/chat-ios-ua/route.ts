@@ -11,7 +11,21 @@ const SYSTEM_PROMPT =
 export async function POST(req: Request) {
   try {
     const body = await req.json();
+    //TODO: replace deprecated signature with `LangChainAdapter.toAIStream()`.
+    // See https://sdk.vercel.ai/providers/adapters/langchain.
     const { stream, handlers } = LangChainStream();
+
+    /**
+     * Determines whether to use retrieval-augmented generation (RAG).
+     *
+     * When `true`, the chatbot will fetch and include contextual information
+     * from the website’s vector database to provide more informed and
+     * content-aware responses.
+     *
+     * When `false`, the chatbot will respond purely based on the model’s
+     * built-in knowledge without referencing stored website content.
+     */
+    const useRetrieval = true;
 
     try {
       // Attempt to create a chat response with the primary model provider.
@@ -20,6 +34,7 @@ export async function POST(req: Request) {
         body,
         handlers,
         systemPrompt: SYSTEM_PROMPT,
+        useRetrieval: useRetrieval,
       });
     } catch (error) {
       // If the primary provider fails, fall back to the secondary provider.
@@ -32,6 +47,7 @@ export async function POST(req: Request) {
         body,
         handlers,
         systemPrompt: SYSTEM_PROMPT,
+        useRetrieval: useRetrieval,
       });
     }
 

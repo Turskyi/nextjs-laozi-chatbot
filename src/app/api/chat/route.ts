@@ -47,6 +47,18 @@ export async function POST(req: Request) {
   // See https://sdk.vercel.ai/providers/adapters/langchain.
   const { stream, handlers } = LangChainStream();
 
+  /**
+   * Determines whether to use retrieval-augmented generation (RAG).
+   *
+   * When `true`, the chatbot will fetch and include contextual information
+   * from the website’s vector database to provide more informed and
+   * content-aware responses.
+   *
+   * When `false`, the chatbot will respond purely based on the model’s
+   * built-in knowledge without referencing stored website content.
+   */
+  const useRetrieval = true;
+
   let systemPrompt = SYSTEM_PROMPT_EN;
   let isUa = false;
 
@@ -82,7 +94,7 @@ export async function POST(req: Request) {
       body,
       handlers,
       systemPrompt,
-      useRetrieval: false,
+      useRetrieval: useRetrieval,
     });
   } catch (error) {
     console.error('Google model error:', error);
@@ -92,7 +104,7 @@ export async function POST(req: Request) {
         body,
         handlers,
         systemPrompt,
-        useRetrieval: false,
+        useRetrieval: useRetrieval,
       });
     } catch (fallbackError) {
       console.error('OpenAI fallback error ☠︎:', fallbackError);
