@@ -1,4 +1,6 @@
-export const runtime = 'edge';
+export const runtime = 'nodejs';
+export const maxDuration = 60;
+export const dynamic = 'force-dynamic';
 export const preferredRegion = 'auto';
 import { LangChainStream, StreamingTextResponse } from 'ai';
 
@@ -60,14 +62,12 @@ export async function POST(req: Request) {
   const useRetrieval = true;
 
   let systemPrompt = SYSTEM_PROMPT_EN;
-  let isUa = false;
 
   if (
     locale &&
     (locale === LOCALES.UKRAINIAN || locale.startsWith(LOCALES.UKRAINIAN))
   ) {
     systemPrompt = SYSTEM_PROMPT_UA;
-    isUa = true;
   } else if (
     locale &&
     (locale === LOCALES.LATVIAN || locale.startsWith(LOCALES.LATVIAN))
@@ -88,38 +88,33 @@ export async function POST(req: Request) {
     }
   }
 
-  try {
-    await createChatResponse({
-      modelProvider: MODEL_PROVIDERS.GOOGLE,
-      body,
-      handlers,
-      systemPrompt,
-      useRetrieval: useRetrieval,
-    });
-  } catch (error) {
-    console.error('Google model error:', error);
+  // Start the chat response generation asynchronously.
+  // We do not await this to ensure the stream is returned immediately,
+  // avoiding Vercel timeouts for the initial response.
+  (async () => {
     try {
       await createChatResponse({
-        modelProvider: MODEL_PROVIDERS.OPENAI,
+        modelProvider: MODEL_PROVIDERS.GOOGLE,
         body,
         handlers,
         systemPrompt,
-        useRetrieval: USE_RETRIEVAL_FALLBACK,
+        useRetrieval: useRetrieval,
       });
-    } catch (fallbackError) {
-      console.error('OpenAI fallback error ☠︎:', fallbackError);
-      if (isUa) {
-        return Response.json(
-          { error: '༼ ༎ຶ ෴ ༎ຶ༽\nВнутрішня помилка сервера' },
-          { status: 500 },
-        );
+    } catch (error) {
+      console.error('Google model error:', error);
+      try {
+        await createChatResponse({
+          modelProvider: MODEL_PROVIDERS.OPENAI,
+          body,
+          handlers,
+          systemPrompt,
+          useRetrieval: USE_RETRIEVAL_FALLBACK,
+        });
+      } catch (fallbackError) {
+        console.error('OpenAI fallback error ☠︎:', fallbackError);
       }
-      return Response.json(
-        { error: '( ˇ෴ˇ )\nInternal server error ☠︎︎' },
-        { status: 500 },
-      );
     }
-  }
+  })();
 
   return new StreamingTextResponse(stream);
 }

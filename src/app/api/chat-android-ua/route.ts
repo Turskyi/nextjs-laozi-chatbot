@@ -1,7 +1,9 @@
-export const runtime = 'edge';
+export const runtime = 'nodejs';
+export const maxDuration = 60;
+export const dynamic = 'force-dynamic';
 export const preferredRegion = 'auto';
 import { LangChainStream, StreamingTextResponse } from 'ai';
-import { ROLES, MODEL_PROVIDERS, USE_RETRIEVAL_FALLBACK } from '../../../../constants';
+import { MODEL_PROVIDERS, USE_RETRIEVAL_FALLBACK } from '../../../../constants';
 import { createChatResponse } from '@/lib/createChatResponse';
 
 const isDebug = false;
@@ -36,34 +38,43 @@ export async function POST(req: Request) {
      */
     const useRetrieval = true;
 
-    try {
-      await createChatResponse({
-        modelProvider: MODEL_PROVIDERS.GOOGLE,
-        body,
-        handlers,
-        systemPrompt: SYSTEM_PROMPT_UA,
-        useRetrieval: useRetrieval,
-      });
-    } catch (error) {
-      console.error('Google model error:', error);
-      if (body) {
-        // The second parameter (null) is a replacer function (not used here).
-        // The third parameter (2) specifies the number of spaces for
-        // indentation,
-        // making the JSON output readable.
-        console.error(
-          'Request body that caused error:',
-          JSON.stringify(body, null, 2),
-        );
+    // Start the chat response generation asynchronously.
+    // We do not await this to ensure the stream is returned immediately,
+    // avoiding Vercel timeouts for the initial response.
+    (async () => {
+      try {
+        await createChatResponse({
+          modelProvider: MODEL_PROVIDERS.GOOGLE,
+          body,
+          handlers,
+          systemPrompt: SYSTEM_PROMPT_UA,
+          useRetrieval: useRetrieval,
+        });
+      } catch (error) {
+        console.error('Google model error:', error);
+        if (body) {
+          // The second parameter (null) is a replacer function (not used here).
+          // The third parameter (2) specifies the number of spaces for
+          // indentation,
+          // making the JSON output readable.
+          console.error(
+            'Request body that caused error:',
+            JSON.stringify(body, null, 2),
+          );
+        }
+        try {
+          await createChatResponse({
+            modelProvider: MODEL_PROVIDERS.OPENAI,
+            body,
+            handlers,
+            systemPrompt: SYSTEM_PROMPT_UA,
+            useRetrieval: USE_RETRIEVAL_FALLBACK,
+          });
+        } catch (fallbackError) {
+          console.error('Fallback model failed:', fallbackError);
+        }
       }
-      await createChatResponse({
-        modelProvider: MODEL_PROVIDERS.OPENAI,
-        body,
-        handlers,
-        systemPrompt: SYSTEM_PROMPT_UA,
-        useRetrieval: USE_RETRIEVAL_FALLBACK,
-      });
-    }
+    })();
 
     return new StreamingTextResponse(stream);
   } catch (error) {
