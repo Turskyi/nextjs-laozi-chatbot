@@ -1,7 +1,7 @@
 export const runtime = 'edge';
 export const preferredRegion = 'auto';
 import { LangChainStream, StreamingTextResponse } from 'ai';
-import { MODEL_PROVIDERS } from '../../../../constants';
+import { MODEL_PROVIDERS, USE_RETRIEVAL_FALLBACK } from '../../../../constants';
 import { createChatResponse } from '@/lib/createChatResponse';
 
 const systemPrompt = `You are a helpful assistant that provides answers based on the teachings of Laozi, the ancient Chinese philosopher. Respond thoughtfully and with wisdom, reflecting the principles of Taoism.`;
@@ -41,7 +41,7 @@ export async function POST(req: Request) {
         body,
         handlers,
         systemPrompt,
-        useRetrieval: useRetrieval,
+        useRetrieval: USE_RETRIEVAL_FALLBACK,
       });
     } catch (fallbackError) {
       console.error('OpenAI fallback error ☠︎:', fallbackError);

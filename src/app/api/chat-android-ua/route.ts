@@ -1,7 +1,7 @@
 export const runtime = 'edge';
 export const preferredRegion = 'auto';
 import { LangChainStream, StreamingTextResponse } from 'ai';
-import { ROLES, MODEL_PROVIDERS } from '../../../../constants';
+import { ROLES, MODEL_PROVIDERS, USE_RETRIEVAL_FALLBACK } from '../../../../constants';
 import { createChatResponse } from '@/lib/createChatResponse';
 
 const isDebug = false;
@@ -61,7 +61,7 @@ export async function POST(req: Request) {
         body,
         handlers,
         systemPrompt: SYSTEM_PROMPT_UA,
-        useRetrieval: useRetrieval,
+        useRetrieval: USE_RETRIEVAL_FALLBACK,
       });
     }
 

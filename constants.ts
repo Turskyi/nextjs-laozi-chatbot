@@ -51,3 +51,12 @@ export const LOCALES = {
   UKRAINIAN: 'uk',
   LATVIAN: 'lv',
 } as const;
+
+/**
+ * Disables retrieval-augmented generation (RAG) for fallback requests.
+ *
+ * This is set to `false` to avoid "Collection already exists" errors that occur
+ * when switching between model providers (e.g., Google to OpenAI) that use
+ * different vector embedding dimensions.
+ */
+export const USE_RETRIEVAL_FALLBACK = false;

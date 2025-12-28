@@ -2,7 +2,7 @@ export const runtime = 'edge';
 export const preferredRegion = 'auto';
 import { LangChainStream, StreamingTextResponse } from 'ai';
 
-import { MODEL_PROVIDERS, LOCALES } from '../../../../constants';
+import { MODEL_PROVIDERS, LOCALES, USE_RETRIEVAL_FALLBACK } from '../../../../constants';
 import { createChatResponse } from '@/lib/createChatResponse';
 
 const SYSTEM_PROMPT_EN =
@@ -104,7 +104,7 @@ export async function POST(req: Request) {
         body,
         handlers,
         systemPrompt,
-        useRetrieval: useRetrieval,
+        useRetrieval: USE_RETRIEVAL_FALLBACK,
       });
     } catch (fallbackError) {
       console.error('OpenAI fallback error ☠︎:', fallbackError);
