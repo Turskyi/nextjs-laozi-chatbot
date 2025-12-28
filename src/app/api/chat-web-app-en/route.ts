@@ -37,6 +37,12 @@ const SYSTEM_PROMPT_WEB_EN =
 /**
  * Handles POST requests for English web app chat endpoint.
  * Uses Google as primary provider and OpenAI as fallback.
+ *
+ * This implementation is inspired by the following repository:
+ * https://github.com/codinginflow/nextjs-langchain-portfolio/blob/
+ * Final-Project/src/app/api/chat/route.ts
+ *
+ * @param {Request} req - The incoming request object.
  */
 export async function POST(req: Request) {
   // Parse body defensively - some clients (or preflight requests) may not send a JSON body.

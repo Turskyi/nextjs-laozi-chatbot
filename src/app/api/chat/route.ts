@@ -4,8 +4,28 @@ export const dynamic = 'force-dynamic';
 export const preferredRegion = 'auto';
 import { LangChainStream, StreamingTextResponse } from 'ai';
 
-import { MODEL_PROVIDERS, LOCALES, USE_RETRIEVAL_FALLBACK } from '../../../../constants';
+import {
+  MODEL_PROVIDERS,
+  LOCALES,
+  USE_RETRIEVAL_FALLBACK,
+} from '../../../../constants';
 import { createChatResponse } from '@/lib/createChatResponse';
+
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+
+/**
+ * Handles CORS preflight for the endpoint.
+ */
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 204,
+    headers: CORS_HEADERS,
+  });
+}
 
 const SYSTEM_PROMPT_EN =
   'You are a chatbot for an app ' +
@@ -37,12 +57,23 @@ const SYSTEM_PROMPT_LV =
  * Handles POST requests to the chat API.
  *
  * This implementation is inspired by the following repository:
- * https://github.com/codinginflow/nextjs-langchain-portfolio/blob/Final-Project/src/app/api/chat/route.ts
+ * https://github.com/codinginflow/nextjs-langchain-portfolio/blob/
+ * Final-Project/src/app/api/chat/route.ts
  *
  * @param {Request} req - The incoming request object.
  */
 export async function POST(req: Request) {
-  const body = await req.json();
+  // Parse body defensively - some clients (or preflight requests) may not send a JSON body.
+  let body: any = null;
+  try {
+    body = await req
+      .clone()
+      .json()
+      .catch(() => null);
+  } catch (e) {
+    body = null;
+  }
+
   const { locale } = body;
 
   //TODO: replace deprecated signature with `LangChainAdapter.toAIStream()`.
@@ -112,9 +143,16 @@ export async function POST(req: Request) {
         });
       } catch (fallbackError) {
         console.error('OpenAI fallback error ☠︎:', fallbackError);
+        return new Response(
+          JSON.stringify({ error: '( ˇ෴ˇ )\nВнутрішня помилка сервера ☠︎︎' }),
+          {
+            status: 500,
+            headers: { 'Content-Type': 'application/json', ...CORS_HEADERS },
+          },
+        );
       }
     }
   })();
 
-  return new StreamingTextResponse(stream);
+  return new StreamingTextResponse(stream, { headers: CORS_HEADERS });
 }
