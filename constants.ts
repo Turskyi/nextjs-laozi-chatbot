@@ -1,4 +1,4 @@
-export const APP_NAME = 'Daoism - Laozi AI';
+export const APP_NAME = 'Daoism • Laozi AI';
 export const CHAT_NAME = 'Laozi Chatbot';
 export const DOMAIN = 'daoizm.online';
 export const WEBSITE = 'https://' + DOMAIN;

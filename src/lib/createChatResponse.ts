@@ -16,7 +16,7 @@ import { UpstashRedisCache } from '@langchain/community/caches/upstash_redis';
 import { ChatOpenAI } from '@langchain/openai';
 import { AI_MODEL_NAMES, ROLES, MODEL_PROVIDERS } from '../../constants';
 
-const isDebug = true;
+const isDebug = false;
 
 /**
  * Universal chat response generator for all app variants (web, Android, iOS).
@@ -55,7 +55,7 @@ export async function createChatResponse({
   if (isDebug) console.log('UpstashRedisCache created.');
 
   // This logs generated text and prompt to the console.
-  const isVerboseLoggingEnabled = true;
+  const isVerboseLoggingEnabled = false;
 
   const ChatModelClass =
     modelProvider === MODEL_PROVIDERS.GOOGLE
@@ -213,7 +213,7 @@ export async function createChatResponse({
       } catch (error) {
         console.warn('Google AI timeout, falling back to OpenAI...');
         // The second parameter (null) is a replacer function (not used here).
-        // The third parameter (2) specifies the number of spaces for
+        // The third parameter (2) specifies the number of spaces for 
         // indentation,
         // making the JSON output readable.
         console.warn(
