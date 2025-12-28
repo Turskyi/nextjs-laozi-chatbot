@@ -6,13 +6,13 @@ import {
   PromptTemplate,
 } from '@langchain/core/prompts';
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
-// import { Redis } from '@upstash/redis';
+import { Redis } from '@upstash/redis';
 import { Message as VercelChatMessage } from 'ai';
 import { createStuffDocumentsChain } from 'langchain/chains/combine_documents';
 import { createHistoryAwareRetriever } from 'langchain/chains/history_aware_retriever';
 import { createRetrievalChain } from 'langchain/chains/retrieval';
 
-// import { UpstashRedisCache } from '@langchain/community/caches/upstash_redis';
+import { UpstashRedisCache } from '@langchain/community/caches/upstash_redis';
 import { ChatOpenAI } from '@langchain/openai';
 import { AI_MODEL_NAMES, ROLES, MODEL_PROVIDERS } from '../../constants';
 
@@ -50,9 +50,9 @@ export async function createChatResponse({
 
   const currentMessageContent = messages[messages.length - 1].content;
 
-  // if (isDebug) console.log('Creating UpstashRedisCache...');
-  // const cache = new UpstashRedisCache({ client: Redis.fromEnv() });
-  // if (isDebug) console.log('UpstashRedisCache created.');
+  if (isDebug) console.log('Creating UpstashRedisCache...');
+  const cache = new UpstashRedisCache({ client: Redis.fromEnv() });
+  if (isDebug) console.log('UpstashRedisCache created.');
 
   // This logs generated text and prompt to the console.
   const isVerboseLoggingEnabled = true;
@@ -71,7 +71,7 @@ export async function createChatResponse({
     streaming: true,
     callbacks: [handlers],
     verbose: isVerboseLoggingEnabled,
-    // cache,
+    cache,
   });
   if (isDebug) console.log(`${ChatModelClass.name} initialized.`);
 
@@ -82,7 +82,7 @@ export async function createChatResponse({
         ? AI_MODEL_NAMES.GOOGLE
         : AI_MODEL_NAMES.OPENAI,
     verbose: isVerboseLoggingEnabled,
-    // cache,
+    cache,
   });
   if (isDebug) console.log(`Rephrasing model initialized.`);
 
@@ -160,10 +160,28 @@ export async function createChatResponse({
     if (isDebug) console.log('Retrieval chain created.');
 
     if (isDebug) console.log('Invoking retrieval chain...');
-    await retrievalChain.invoke({
-      input: currentMessageContent,
-      chat_history: chatHistory,
-    });
+
+    // Add timeout specifically for Google model to trigger fallback if it hangs
+    if (modelProvider === MODEL_PROVIDERS.GOOGLE) {
+      await Promise.race([
+        retrievalChain.invoke({
+          input: currentMessageContent,
+          chat_history: chatHistory,
+        }),
+        new Promise((_, reject) =>
+          setTimeout(
+            () => reject(new Error('Google AI Retrieval timeout after 20s')),
+            20000,
+          ),
+        ),
+      ]);
+    } else {
+      await retrievalChain.invoke({
+        input: currentMessageContent,
+        chat_history: chatHistory,
+      });
+    }
+
     if (isDebug) console.log('Retrieval chain invoked.');
     if (isDebug) console.log('--- Retrieval-augmented chat end ---');
   } else {
@@ -195,7 +213,7 @@ export async function createChatResponse({
       } catch (error) {
         console.warn('Google AI timeout, falling back to OpenAI...');
         // The second parameter (null) is a replacer function (not used here).
-        // The third parameter (2) specifies the number of spaces for 
+        // The third parameter (2) specifies the number of spaces for
         // indentation,
         // making the JSON output readable.
         console.warn(
@@ -208,7 +226,7 @@ export async function createChatResponse({
           streaming: true,
           callbacks: [handlers],
           verbose: true,
-          // cache,
+          cache,
         });
         const chain = prompt.pipe(openAiChatModel);
         await chain.invoke({
