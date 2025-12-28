@@ -1,7 +1,11 @@
 export const runtime = 'edge';
 export const preferredRegion = 'auto';
 import { LangChainStream, StreamingTextResponse } from 'ai';
-import { MODEL_PROVIDERS, WEBSITE } from '../../../../constants';
+import {
+  MODEL_PROVIDERS,
+  USE_RETRIEVAL_FALLBACK,
+  WEBSITE,
+} from '../../../../constants';
 import { createChatResponse } from '@/lib/createChatResponse';
 
 const CORS_HEADERS = {
@@ -63,35 +67,40 @@ export async function POST(req: Request) {
     'Коли це має сенс, надавайте посилання на сторінки, які містять більше інформації про тему з наданого контексту. ' +
     'Форматуйте свої повідомлення у форматі markdown.';
 
-  try {
-    await createChatResponse({
-      modelProvider: MODEL_PROVIDERS.GOOGLE,
-      body,
-      handlers,
-      systemPrompt,
-      useRetrieval: useRetrieval,
-    });
-  } catch (error) {
-    console.error('Google model error:', error);
+  // Start the chat response generation asynchronously.
+  // We do not await this to ensure the stream is returned immediately,
+  // avoiding Vercel timeouts for the initial response.
+  (async () => {
     try {
       await createChatResponse({
-        modelProvider: MODEL_PROVIDERS.OPENAI,
+        modelProvider: MODEL_PROVIDERS.GOOGLE,
         body,
         handlers,
         systemPrompt,
         useRetrieval: useRetrieval,
       });
-    } catch (fallbackError) {
-      console.error('OpenAI fallback error ☠︎:', fallbackError);
-      return new Response(
-        JSON.stringify({ error: '( ˇ෴ˇ )\nВнутрішня помилка сервера ☠︎︎' }),
-        {
-          status: 500,
-          headers: { 'Content-Type': 'application/json', ...CORS_HEADERS },
-        },
-      );
+    } catch (error) {
+      console.error('Google model error:', error);
+      try {
+        await createChatResponse({
+          modelProvider: MODEL_PROVIDERS.OPENAI,
+          body,
+          handlers,
+          systemPrompt,
+          useRetrieval: USE_RETRIEVAL_FALLBACK,
+        });
+      } catch (fallbackError) {
+        console.error('OpenAI fallback error ☠︎:', fallbackError);
+        return new Response(
+          JSON.stringify({ error: '( ˇ෴ˇ )\nВнутрішня помилка сервера ☠︎︎' }),
+          {
+            status: 500,
+            headers: { 'Content-Type': 'application/json', ...CORS_HEADERS },
+          },
+        );
+      }
     }
-  }
+  })();
 
   return new StreamingTextResponse(stream, { headers: CORS_HEADERS });
 }
