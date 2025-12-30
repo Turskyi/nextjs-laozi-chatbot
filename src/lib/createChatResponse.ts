@@ -170,8 +170,8 @@ export async function createChatResponse({
         }),
         new Promise((_, reject) =>
           setTimeout(
-            () => reject(new Error('Google AI Retrieval timeout after 20s')),
-            20000,
+            () => reject(new Error('Google AI Retrieval timeout after 8s')),
+            8000,
           ),
         ),
       ]);
