@@ -4,18 +4,20 @@ import { Bot, SendHorizontal, Trash, XCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { API_ENDPOINTS, ROLES } from '../../constants';
+import { API_ENDPOINTS, LOCALES, ROLES } from '../../constants';
 
 interface AIChatBoxProps {
   open: boolean;
   onClose: () => void;
   apiEndpoint?: string;
+  locale?: string;
 }
 
 export default function AIChatBox({
   open,
   onClose,
   apiEndpoint = API_ENDPOINTS.CHAT_WEB_EN,
+  locale = LOCALES.ENGLISH,
 }: AIChatBoxProps) {
   const {
     messages,
@@ -25,7 +27,7 @@ export default function AIChatBox({
     setMessages,
     isLoading,
     error,
-  } = useChat({ api: apiEndpoint });
+  } = useChat({ api: apiEndpoint, body: { locale } });
 
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);

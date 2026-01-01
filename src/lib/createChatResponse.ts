@@ -8,13 +8,14 @@ import {
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
 import { Redis } from '@upstash/redis';
 import { Message as VercelChatMessage } from 'ai';
+import { createHash } from 'crypto';
 import { createStuffDocumentsChain } from 'langchain/chains/combine_documents';
 import { createHistoryAwareRetriever } from 'langchain/chains/history_aware_retriever';
 import { createRetrievalChain } from 'langchain/chains/retrieval';
 
 import { UpstashRedisCache } from '@langchain/community/caches/upstash_redis';
 import { ChatOpenAI } from '@langchain/openai';
-import { AI_MODEL_NAMES, ROLES, MODEL_PROVIDERS } from '../../constants';
+import { AI_MODEL_NAMES, MODEL_PROVIDERS, ROLES } from '../../constants';
 
 const isDebug = false;
 
@@ -54,7 +55,14 @@ export async function createChatResponse({
   const currentMessageContent = messages[messages.length - 1].content;
 
   if (isDebug) console.log('Creating UpstashRedisCache...');
-  const cache = new UpstashRedisCache({ client: Redis.fromEnv() });
+  const cache = new UpstashRedisCache({
+    client: Redis.fromEnv(),
+    // Address the warning about insecure default cache key hashing
+    // See: https://js.langchain.com/docs/troubleshooting/warnings/
+    // insecure-cache-algorithm
+    // @ts-ignore: keyEncoder is missing from types but works at runtime.
+    keyEncoder: (key: string) => createHash('sha256').update(key).digest('hex'),
+  });
   if (isDebug) console.log('UpstashRedisCache created.');
 
   const ChatModelClass =
