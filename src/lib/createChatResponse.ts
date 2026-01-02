@@ -8,14 +8,13 @@ import {
 import { ChatGoogleGenerativeAI } from '@langchain/google-genai';
 import { Redis } from '@upstash/redis';
 import { Message as VercelChatMessage } from 'ai';
-import { createHash } from 'crypto';
 import { createStuffDocumentsChain } from 'langchain/chains/combine_documents';
 import { createHistoryAwareRetriever } from 'langchain/chains/history_aware_retriever';
 import { createRetrievalChain } from 'langchain/chains/retrieval';
 
 import { UpstashRedisCache } from '@langchain/community/caches/upstash_redis';
 import { ChatOpenAI } from '@langchain/openai';
-import { AI_MODEL_NAMES, MODEL_PROVIDERS, ROLES } from '../../constants';
+import { AI_MODEL_NAMES, ROLES, MODEL_PROVIDERS } from '../../constants';
 
 const isDebug = false;
 
@@ -24,7 +23,8 @@ const isVerboseLoggingEnabled = false;
 
 /**
  * Universal chat response generator for all app variants (web, Android, iOS).
- * Supports both simple chat and retrieval-augmented chat depending on `useRetrieval`.
+ * Supports both simple chat and retrieval-augmented chat depending on
+ * `useRetrieval`.
  */
 export async function createChatResponse({
   modelProvider,
@@ -55,14 +55,7 @@ export async function createChatResponse({
   const currentMessageContent = messages[messages.length - 1].content;
 
   if (isDebug) console.log('Creating UpstashRedisCache...');
-  const cache = new UpstashRedisCache({
-    client: Redis.fromEnv(),
-    // Address the warning about insecure default cache key hashing
-    // See: https://js.langchain.com/docs/troubleshooting/warnings/
-    // insecure-cache-algorithm
-    // @ts-ignore: keyEncoder is missing from types but works at runtime.
-    keyEncoder: (key: string) => createHash('sha256').update(key).digest('hex'),
-  });
+  const cache = new UpstashRedisCache({ client: Redis.fromEnv() });
   if (isDebug) console.log('UpstashRedisCache created.');
 
   const ChatModelClass =
@@ -124,7 +117,11 @@ export async function createChatResponse({
       [ROLES.USER, '{input}'],
       [
         ROLES.USER,
-        'Given the above conversation, generate a search query to look up in order to get information relevant to the current question. Don’t leave out any relevant keywords. Only return the query and no other text.',
+        'Given the above conversation, ' +
+          'generate a search query to look up in order to get information ' +
+          'relevant to the current question. ' +
+          'Don’t leave out any relevant keywords. ' +
+          'Only return the query and no other text.',
       ],
     ]);
 
