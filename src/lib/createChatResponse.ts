@@ -14,7 +14,7 @@ import { createRetrievalChain } from 'langchain/chains/retrieval';
 
 import { UpstashRedisCache } from '@langchain/community/caches/upstash_redis';
 import { ChatOpenAI } from '@langchain/openai';
-import { AI_MODEL_NAMES, ROLES, MODEL_PROVIDERS } from '../../constants';
+import { AI_MODEL_NAMES, MODEL_PROVIDERS, ROLES } from '../../constants';
 
 const isDebug = false;
 
@@ -55,7 +55,33 @@ export async function createChatResponse({
   const currentMessageContent = messages[messages.length - 1].content;
 
   if (isDebug) console.log('Creating UpstashRedisCache...');
-  const cache = new UpstashRedisCache({ client: Redis.fromEnv() });
+  const cache = new UpstashRedisCache({
+    client: Redis.fromEnv(),
+    /**
+     * Notes on "insecure hashing algorithm" warning:
+     *
+     * You may see a warning from `LangChain` about "The default method for
+     * hashing keys is insecure".
+     * See: https://js.langchain.com/docs/troubleshooting/warnings/
+     * insecure-cache-algorithm
+     *
+     * We have decided to ignore this warning for now because:
+     * 1. The fix requires passing a `keyEncoder` function that uses a secure
+     *    hash (like SHA-256).
+     * 2. This function must be synchronous.
+     * 3. In the Vercel Edge runtime (where this code runs), the standard
+     *    Node.js `crypto` module is not available.
+     *    The Web Crypto API (`crypto.subtle`) is available but is asynchronous,
+     *    which is incompatible with the synchronous `keyEncoder` expected by
+     *    `UpstashRedisCache`.
+     * 4. Importing a pure JS cryptographic library just for this hash adds
+     *    unnecessary bundle size.
+     *
+     * Therefore, we accept the default hashing method despite the warning.
+     * Do not attempt to use `crypto` (breaks Edge) or `crypto.subtle` (breaks
+     * execution flow) to fix this.
+     */
+  });
   if (isDebug) console.log('UpstashRedisCache created.');
 
   const ChatModelClass =
@@ -93,8 +119,7 @@ export async function createChatResponse({
     // Retrieval-augmented chat logic (for web version)
     const retriever =
       modelProvider === MODEL_PROVIDERS.GOOGLE
-        ? // Gets vector store to retrieve documents.
-          (
+        ? (
             await (async () => {
               if (isDebug) console.log('Getting GoogleVectorStore...');
               const store = await getGoogleVectorStore();
