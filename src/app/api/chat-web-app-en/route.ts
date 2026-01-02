@@ -45,7 +45,8 @@ const SYSTEM_PROMPT_WEB_EN =
  * @param {Request} req - The incoming request object.
  */
 export async function POST(req: Request) {
-  // Parse body defensively - some clients (or preflight requests) may not send a JSON body.
+  // Parse body defensively - some clients (or preflight requests) may not send
+  // a JSON body.
   let body: any = null;
   try {
     body = await req
@@ -97,7 +98,7 @@ export async function POST(req: Request) {
       } catch (fallbackError) {
         console.error('OpenAI fallback error ☠︎:', fallbackError);
         return new Response(
-          JSON.stringify({ error: '( ˇ෴ˇ )\nВнутрішня помилка сервера ☠︎︎' }),
+          JSON.stringify({ error: '( ˇ෴ˇ )\nInternal server error ☠︎︎' }),
           {
             status: 500,
             headers: { 'Content-Type': 'application/json', ...CORS_HEADERS },

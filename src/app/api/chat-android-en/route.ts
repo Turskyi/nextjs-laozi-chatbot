@@ -72,20 +72,20 @@ export async function POST(req: Request) {
             useRetrieval: USE_RETRIEVAL_FALLBACK,
           });
         } catch (fallbackError) {
-          console.error('Fallback model failed:', fallbackError);
+          console.error('Fallback model failed ☠︎:', fallbackError);
         }
       }
     })();
 
     return new StreamingTextResponse(stream);
   } catch (error) {
-    console.error(error);
+    console.error('Error in chat-android-en route:', error);
     if (body) {
       // The second parameter (null) is a replacer function (not used here).
       // The third parameter (2) specifies the number of spaces for indentation,
       // making the JSON output readable.
       console.error(
-        'Request body that caused error:',
+        'Request body that caused error in chat-android-en route:',
         JSON.stringify(body, null, 2),
       );
     }

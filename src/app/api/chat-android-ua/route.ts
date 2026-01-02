@@ -82,13 +82,13 @@ export async function POST(req: Request) {
 
     return new StreamingTextResponse(stream);
   } catch (error) {
-    console.error(error);
+    console.error('Error in chat-android-ua route:', error);
     if (body) {
       // The second parameter (null) is a replacer function (not used here).
       // The third parameter (2) specifies the number of spaces for indentation,
       // making the JSON output readable.
       console.error(
-        'Request body that caused error:',
+        'Request body that caused error in chat-android-ua route:',
         JSON.stringify(body, null, 2),
       );
     }

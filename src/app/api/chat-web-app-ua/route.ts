@@ -29,7 +29,8 @@ export async function OPTIONS() {
  * Uses Google as primary provider and OpenAI as fallback.
  */
 export async function POST(req: Request) {
-  // Parse body defensively - some clients (or preflight requests) may not send a JSON body.
+  // Parse body defensively - some clients (or preflight requests) may not send
+  // a JSON body.
   let body: any = null;
   try {
     body = await req
@@ -64,7 +65,8 @@ export async function POST(req: Request) {
     'Відповідайте на запитання користувача. ' +
     'Використовуйте наведений нижче контекст, якщо потрібно. ' +
     'Додавайте емодзі, якщо це доречно. ' +
-    'Коли це має сенс, надавайте посилання на сторінки, які містять більше інформації про тему з наданого контексту. ' +
+    'Коли це має сенс, надавайте посилання на сторінки, ' +
+    'які містять більше інформації про тему з наданого контексту. ' +
     'Форматуйте свої повідомлення у форматі markdown.';
 
   // Start the chat response generation asynchronously.

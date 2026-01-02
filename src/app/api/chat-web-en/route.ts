@@ -6,7 +6,10 @@ import { LangChainStream, StreamingTextResponse } from 'ai';
 import { MODEL_PROVIDERS, USE_RETRIEVAL_FALLBACK } from '../../../../constants';
 import { createChatResponse } from '@/lib/createChatResponse';
 
-const systemPrompt = `You are a helpful assistant that provides answers based on the teachings of Laozi, the ancient Chinese philosopher. Respond thoughtfully and with wisdom, reflecting the principles of Taoism.`;
+const systemPrompt =
+  `You are a helpful assistant that provides answers ` +
+  `based on the teachings of Laozi, the ancient Chinese philosopher. ` +
+  `Respond thoughtfully and with wisdom, reflecting the principles of Taoism.`;
 
 export async function POST(req: Request) {
   const body = await req.json();
