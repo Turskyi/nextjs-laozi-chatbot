@@ -86,7 +86,7 @@ export async function POST(req: Request) {
       );
     }
     return Response.json(
-      { error: '༼ ༎ຶ ෴ ༎ຶ༽\nВнутрішня помилка сервера' },
+      { error: '༼ ༎ຶ ෴ ༎ຶ༽\nInternal server error' },
       { status: 500 },
     );
   }
