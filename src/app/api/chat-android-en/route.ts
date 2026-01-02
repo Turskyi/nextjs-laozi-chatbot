@@ -1,7 +1,11 @@
 export const runtime = 'edge';
 export const preferredRegion = 'auto';
 import { LangChainStream, StreamingTextResponse } from 'ai';
-import { MODEL_PROVIDERS, USE_RETRIEVAL_FALLBACK } from '../../../../constants';
+import {
+  APP_NAME,
+  MODEL_PROVIDERS,
+  USE_RETRIEVAL_FALLBACK,
+} from '../../../../constants';
 import { createChatResponse } from '@/lib/createChatResponse';
 
 const isDebug = false;
@@ -28,7 +32,7 @@ export async function POST(req: Request) {
     const useRetrieval = true;
 
     const systemPrompt =
-      'You are a chatbot for an Android app "Daoism • Laozi AI" ' +
+      `You are a chatbot for an Android app "${APP_NAME}" ` +
       'dedicated to Daoism. ' +
       'You impersonate the Laozi. ' +
       "Answer the user's questions. " +

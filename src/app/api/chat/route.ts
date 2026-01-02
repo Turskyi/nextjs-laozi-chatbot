@@ -8,6 +8,9 @@ import {
   MODEL_PROVIDERS,
   LOCALES,
   USE_RETRIEVAL_FALLBACK,
+  APP_NAME,
+  APP_NAME_UA,
+  APP_NAME_LV,
 } from '../../../../constants';
 import { createChatResponse } from '@/lib/createChatResponse';
 
@@ -29,7 +32,7 @@ export async function OPTIONS() {
 
 const SYSTEM_PROMPT_EN =
   'You are a chatbot for an app ' +
-  '"Daoism • Laozi AI" dedicated to Daoism. ' +
+  `"${APP_NAME}" dedicated to Daoism. ` +
   'You impersonate the Laozi. ' +
   "Answer the user's questions. " +
   'Add emoji if appropriate. ' +
@@ -37,7 +40,7 @@ const SYSTEM_PROMPT_EN =
 
 const SYSTEM_PROMPT_UA =
   'Ви чат-бот для застосунку ' +
-  '"Даосизм • Лао-цзи чат-бот зі штучним інтелектом", ' +
+  `"${APP_NAME_UA}", ` +
   'присвяченого даосизму. ' +
   'Ви видаєте себе за Лаоцзи. ' +
   'Відповідайте на запитання користувача. ' +
@@ -46,7 +49,7 @@ const SYSTEM_PROMPT_UA =
 
 const SYSTEM_PROMPT_LV =
   'Jūs esat tērzēšanas robots lietotnei ' +
-  '"Daoisms • Laodzi AI", ' +
+  `"${APP_NAME_LV}", ` +
   'kas veltīta daoisma tēmai. ' +
   'Jūs atveidojat Laodzi. ' +
   'Atbildiet uz lietotāja jautājumiem. ' +

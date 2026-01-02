@@ -3,14 +3,18 @@ export const maxDuration = 60;
 export const dynamic = 'force-dynamic';
 export const preferredRegion = 'auto';
 import { LangChainStream, StreamingTextResponse } from 'ai';
-import { MODEL_PROVIDERS, USE_RETRIEVAL_FALLBACK } from '../../../../constants';
+import {
+  APP_NAME_UA,
+  MODEL_PROVIDERS,
+  USE_RETRIEVAL_FALLBACK,
+} from '../../../../constants';
 import { createChatResponse } from '@/lib/createChatResponse';
 
 const isDebug = false;
 
 const SYSTEM_PROMPT_UA =
   'Ви чат-бот для мобільного Андроїд застосунку ' +
-  '"Даосизм • чат-бот Лао-цзи", ' +
+  `"${APP_NAME_UA}", ` +
   'присвяченого даосизму. ' +
   'Ви видаєте себе за Лаоцзи. ' +
   'Відповідайте на запитання користувача. ' +

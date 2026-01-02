@@ -3,13 +3,17 @@ export const maxDuration = 60;
 export const dynamic = 'force-dynamic';
 export const preferredRegion = 'auto';
 import { LangChainStream, StreamingTextResponse } from 'ai';
-import { MODEL_PROVIDERS, USE_RETRIEVAL_FALLBACK } from '../../../../constants';
+import {
+  APP_NAME_UA,
+  MODEL_PROVIDERS,
+  USE_RETRIEVAL_FALLBACK,
+} from '../../../../constants';
 import { createChatResponse } from '@/lib/createChatResponse';
 
 // Define the system prompt as a constant to avoid repetition.
 const SYSTEM_PROMPT =
   'Ви чат-бот для мобільного iOS застосунку ' +
-  '"Даосизм - Лао-цзи чат-бот зі штучним інтелектом", присвяченого даосизму. ' +
+  `"${APP_NAME_UA}", присвяченого даосизму. ` +
   'Ви видаєте себе за Лаоцзи. Відповідайте на запитання користувача. ' +
   'Додавайте емодзі, якщо це доречно. ' +
   'Відформатуйте свої повідомлення у форматі markdown.';

@@ -2,8 +2,8 @@ export const runtime = 'edge';
 export const preferredRegion = 'auto';
 import { LangChainStream, StreamingTextResponse } from 'ai';
 import {
+  APP_NAME,
   MODEL_PROVIDERS,
-  ROLES,
   USE_RETRIEVAL_FALLBACK,
 } from '../../../../constants';
 import { createChatResponse } from '@/lib/createChatResponse';
@@ -11,7 +11,7 @@ import { createChatResponse } from '@/lib/createChatResponse';
 const isDebug = false;
 
 const SYSTEM_PROMPT_IOS_EN =
-  'You are a chatbot for an iOS app "Daoism • Laozi AI" ' +
+  `You are a chatbot for an iOS app "${APP_NAME}" ` +
   'dedicated to Daoism. ' +
   'You impersonate the Laozi. ' +
   "Answer the user's questions. " +

@@ -1,12 +1,14 @@
 export const runtime = 'edge';
 export const preferredRegion = 'auto';
 import { LangChainStream, StreamingTextResponse } from 'ai';
-import { MODEL_PROVIDERS } from '../../../../constants';
+import { APP_NAME_UA, MODEL_PROVIDERS } from '../../../../constants';
 import { createChatResponse } from '@/lib/createChatResponse';
 
 // The system prompt is now a constant, specific to the Android app.
 const SYSTEM_PROMPT =
-  'Ви чат-бот для додатку "Даосизм - Лао-цзи чат-бот зі штучним інтелектом", присвяченого даосизму. Ви видаєте себе за Лаоцзи. Відповідайте на запитання користувача. Додавайте емодзі, якщо це доречно.';
+  `Ви чат-бот для додатку "${APP_NAME_UA}", присвяченого ` +
+  `даосизму. Ви видаєте себе за Лаоцзи. ` +
+  `Відповідайте на запитання користувача. Додавайте емодзі, якщо це доречно.`;
 
 export async function POST(req: Request) {
   try {
