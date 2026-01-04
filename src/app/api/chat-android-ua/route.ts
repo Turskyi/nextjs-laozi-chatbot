@@ -10,7 +10,7 @@ import {
 } from '../../../../constants';
 import { createChatResponse } from '@/lib/createChatResponse';
 
-const isDebug = false;
+const isDebug = true;
 
 const SYSTEM_PROMPT_UA =
   'Ви чат-бот для мобільного Андроїд застосунку ' +
