@@ -55,13 +55,13 @@ export async function POST(req: Request) {
           useRetrieval: useRetrieval,
         });
       } catch (error) {
-        console.error('Google model error:', error);
+        console.warn('Google model error:', error);
         if (body) {
           // The second parameter (null) is a replacer function (not used here).
           // The third parameter (2) specifies the number of spaces for
           // indentation,
           // making the JSON output readable.
-          console.error(
+          console.warn(
             'Request body that caused error:',
             JSON.stringify(body, null, 2),
           );
