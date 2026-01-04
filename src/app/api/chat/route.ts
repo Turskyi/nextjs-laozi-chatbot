@@ -74,6 +74,7 @@ export async function POST(req: Request) {
       .json()
       .catch(() => null);
   } catch (e) {
+    console.warn('Error parsing JSON body:', e);
     body = null;
   }
 
@@ -135,7 +136,7 @@ export async function POST(req: Request) {
         useRetrieval: useRetrieval,
       });
     } catch (error) {
-      console.error('Google model error:', error);
+      console.warn('Google model error:', error);
       try {
         await createChatResponse({
           modelProvider: MODEL_PROVIDERS.OPENAI,

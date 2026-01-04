@@ -8,7 +8,7 @@ import {
 } from '../../../../constants';
 import { createChatResponse } from '@/lib/createChatResponse';
 
-const isDebug = true;
+const isDebug = false;
 
 export async function POST(req: Request) {
   let body;
