@@ -16,10 +16,10 @@ import { UpstashRedisCache } from '@langchain/community/caches/upstash_redis';
 import { ChatOpenAI } from '@langchain/openai';
 import { AI_MODEL_NAMES, MODEL_PROVIDERS, ROLES } from '../../constants';
 
-const isDebug = true;
+const isDebug = false;
 
 // This logs generated text and prompt to the console.
-const isVerboseLoggingEnabled = true;
+const isVerboseLoggingEnabled = false;
 
 /**
  * Universal chat response generator for all app variants (web, Android, iOS).
