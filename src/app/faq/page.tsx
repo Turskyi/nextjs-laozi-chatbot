@@ -114,6 +114,36 @@ export default function FAQPage() {
       </section>
       <section className="mt-12">
         <h2 className="text-2xl font-semibold mb-4">
+          {' '}
+          Can I ask Laozi to clarify or rephrase his response?
+        </h2>
+        <p className="mb-4">
+          Absolutely! You can interact with Laozi AI just as you would with a
+          real person. If an answer feels unclear, too complex, or doesn&apos;t
+          quite resonate with you, simply ask for a rephrase or clarification in
+          your next message.
+        </p>
+        <p>
+          Try saying things like:{' '}
+          <strong>&quot;Can you explain that more simply?&quot;</strong>,{' '}
+          <strong>
+            &quot;I don&apos;t quite understand, can you put it
+            differently?&quot;
+          </strong>
+          , or{' '}
+          <strong>
+            &quot;Could you approach this from a different angle?&quot;
+          </strong>
+          . This conversational back-and-forth often leads to insights that the
+          original answer didn&apos;t capture. Even the historical Laozi would
+          have engaged in dialogue with his students - asking for clarification
+          is a sign of genuine curiosity and engagement.
+        </p>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="text-2xl font-semibold mb-4">
+          {' '}
           Why are answers different on web and mobile?
         </h2>
         <p className="mb-4">
