@@ -4,7 +4,7 @@
 [![wakatime](https://wakatime.com/badge/user/f9df5074-b4ea-4c17-b001-fff428ab82aa/project/f0ebddc4-8710-4281-967c-ffdc3055cf85.svg)](https://wakatime.com/badge/user/f9df5074-b4ea-4c17-b001-fff428ab82aa/project/f0ebddc4-8710-4281-967c-ffdc3055cf85)
 <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/Turskyi/nextjs-laozi-chatbot">
 
-# Daoism - Laozi AI Chatbot (Web Version)
+# Daoism • Laozi AI (Web Version)
 
 This project is a web-based chatbot application that leverages the wisdom of
 Laozi and Daoist teachings to provide users with guidance and insights. It is
@@ -81,7 +81,7 @@ result.
 
 ## Website:
 
-Visit the [Daoism - Laozi AI Chatbot](https://daoizm.online/) to experience the
+Visit the [Daoism • Laozi AI](https://daoizm.online/) to experience the
 interactive chatbot and explore Daoist teachings.
 
 ## Features:
