@@ -227,43 +227,19 @@ export async function createChatResponse({
 
     if (modelProvider === MODEL_PROVIDERS.GOOGLE) {
       if (isDebug) console.log('Invoking simple chain with google...');
-      try {
-        await Promise.race([
-          chain.invoke({
-            input: currentMessageContent,
-            chat_history: chatHistory,
-          }),
-          new Promise((_, reject) =>
-            setTimeout(
-              () => reject(new Error('Google AI timeout after 8s')),
-              8000,
-            ),
-          ),
-        ]);
-      } catch (error) {
-        console.warn('Google AI timeout, falling back to OpenAI...');
-        // The second parameter (null) is a replacer function (not used here).
-        // The third parameter (2) specifies the number of spaces for
-        // indentation,
-        // making the JSON output readable.
-        console.warn(
-          'Request body that caused timeout:',
-          JSON.stringify(body, null, 2),
-        );
-        // Fallback to OpenAI directly inside createChatResponse
-        const openAiChatModel = new ChatOpenAI({
-          modelName: AI_MODEL_NAMES.OPENAI,
-          streaming: true,
-          callbacks: [handlers],
-          verbose: true,
-          cache,
-        });
-        const chain = prompt.pipe(openAiChatModel);
-        await chain.invoke({
+      // Timeout handling is done at the route level, not here
+      await Promise.race([
+        chain.invoke({
           input: currentMessageContent,
           chat_history: chatHistory,
-        });
-      }
+        }),
+        new Promise((_, reject) =>
+          setTimeout(
+            () => reject(new Error('Google AI timeout after 8s')),
+            8000,
+          ),
+        ),
+      ]);
     } else {
       if (isDebug) console.log('Invoking simple chain with openai...');
       await chain.invoke({
