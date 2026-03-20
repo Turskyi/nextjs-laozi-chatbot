@@ -90,6 +90,7 @@ export default function FAQPage() {
           answers in other languages even if the interface is English.
         </p>
       </section>
+
       <section className="mt-12">
         <h2 className="text-2xl font-semibold mb-4">
           Why did Laozi stop answering in the middle of my question?
@@ -112,6 +113,7 @@ export default function FAQPage() {
           often comes one thought at a time.
         </p>
       </section>
+
       <section className="mt-12">
         <h2 className="text-2xl font-semibold mb-4">
           {' '}

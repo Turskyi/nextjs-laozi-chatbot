@@ -2,10 +2,15 @@ export const APP_NAME = 'Daoism • Laozi AI';
 export const APP_NAME_UA = 'Даосизм • чат-бот Лао-цзи';
 export const APP_NAME_LV = 'Daoisms • Laodzi MI';
 export const CHAT_NAME = 'Laozi Chatbot';
+
+// Expiration Jun 8, 2026 - auto-renew is off
 export const DOMAIN = 'daoizm.online';
 export const WEBSITE = 'https://' + DOMAIN;
 export const AUTHOR = 'Dmytro Turskyi';
-export const RESEND_DOMAIN = 'kima.website';
+
+// Expiration Jun 8, 2026 - auto-renew is off
+export const RESEND_DOMAIN = 'daoizm.online';
+
 //TODO: replace these links
 export const FACEBOOK = 'https://www.facebook.com/LaoziPhilosopher';
 export const X = 'https://x.com/laozi_daoism';
