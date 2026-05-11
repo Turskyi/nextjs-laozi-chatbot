@@ -33,8 +33,9 @@ export const API_ENDPOINTS = {
 } as const;
 
 export const AI_MODEL_NAMES = {
-  GOOGLE: 'gemini-2.5-flash',
-  OPENAI: 'gpt-4o-mini',
+  GROQ: 'llama-3.3-70b-versatile',
+  MISTRAL: 'mistral-small-latest',
+  GEMINI: 'gemini-2.0-flash-lite',
 } as const;
 
 export const ROLES = {
@@ -44,13 +45,13 @@ export const ROLES = {
 } as const;
 
 export const MODEL_PROVIDERS = {
-  GOOGLE: 'google',
-  OPENAI: 'openai',
+  GROQ: 'groq',
+  MISTRAL: 'mistral',
+  GEMINI: 'gemini',
 } as const;
 
 export const TEXT_EMBEDDING_MODELS = {
-  GOOGLE: 'text-embedding-004',
-  OPENAI: 'text-embedding-3-small',
+  GEMINI: 'gemini-embedding-001',
 } as const;
 
 export const LOCALES = {
@@ -63,7 +64,7 @@ export const LOCALES = {
  * Disables retrieval-augmented generation (RAG) for fallback requests.
  *
  * This is set to `false` to avoid "Collection already exists" errors that occur
- * when switching between model providers (e.g., Google to OpenAI) that use
+ * when switching between model providers that use
  * different vector embedding dimensions.
  */
 export const USE_RETRIEVAL_FALLBACK = false;

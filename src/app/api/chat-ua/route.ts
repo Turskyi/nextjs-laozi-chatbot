@@ -1,43 +1,19 @@
 export const runtime = 'edge';
 export const preferredRegion = 'auto';
-import { LangChainStream, StreamingTextResponse } from 'ai';
-import { APP_NAME_UA, MODEL_PROVIDERS } from '../../../../constants';
-import { createChatResponse } from '@/lib/createChatResponse';
-
-// The system prompt is now a constant, specific to the Android app.
-const SYSTEM_PROMPT =
-  `Ви чат-бот для додатку "${APP_NAME_UA}", присвяченого ` +
-  `даосизму. Ви видаєте себе за Лаоцзи. ` +
-  `Відповідайте на запитання користувача. Додавайте емодзі, якщо це доречно.`;
+import { generateChatResponse } from '@/lib/ai';
+import { SYSTEM_PROMPT_UA } from '@/lib/ai/prompts';
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { stream, handlers } = LangChainStream();
+    const { messages } = body;
 
-    try {
-      // Attempt to generate a response with the primary model provider (Google).
-      await createChatResponse({
-        modelProvider: MODEL_PROVIDERS.GOOGLE,
-        body,
-        handlers,
-        systemPrompt: SYSTEM_PROMPT,
-      });
-    } catch (error) {
-      // If the primary provider fails, log the error and fall back to the secondary.
-      console.warn(
-        'Primary model provider (Google) failed. Falling back to OpenAI.',
-        error,
-      );
-      await createChatResponse({
-        modelProvider: MODEL_PROVIDERS.OPENAI,
-        body,
-        handlers,
-        systemPrompt: SYSTEM_PROMPT,
-      });
-    }
+    const finalMessages = [
+      { role: 'system', content: SYSTEM_PROMPT_UA },
+      ...messages
+    ];
 
-    return new StreamingTextResponse(stream);
+    return await generateChatResponse(finalMessages);
   } catch (error) {
     console.error(
       'An unrecoverable error occurred in the chat endpoint:',
