@@ -11,12 +11,12 @@ export async function getMistralResponse(messages: any[]) {
   });
 
   // Convert the Mistral SDK stream into a standard Response-like object
-  // that OpenAIStream can recognize and parse.
+  // that the AI SDK can recognize and parse.
   const readableStream = new ReadableStream({
     async start(controller) {
       for await (const chunk of stream) {
-        // Map Mistral chunk to OpenAI-compatible chunk format
-        const openAIChunk = {
+        // Map Mistral chunk to a standard AI stream chunk format
+        const standardChunk = {
           id: (chunk as any).data?.id,
           object: 'chat.completion.chunk',
           created: (chunk as any).data?.created,
@@ -31,7 +31,7 @@ export async function getMistralResponse(messages: any[]) {
           })),
         };
 
-        controller.enqueue(new TextEncoder().encode(`data: ${JSON.stringify(openAIChunk)}\n\n`));
+        controller.enqueue(new TextEncoder().encode(`data: ${JSON.stringify(standardChunk)}\n\n`));
       }
       controller.enqueue(new TextEncoder().encode('data: [DONE]\n\n'));
       controller.close();

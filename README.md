@@ -8,51 +8,52 @@
 
 This project is a web-based chatbot application that leverages the wisdom of
 Laozi and Daoist teachings to provide users with guidance and insights. It is
-built using Next.js, a popular React framework, TypeScript for enhanced type
-safety and maintainability, and bootstrapped with
-[`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+built using Next.js and a resilient, triple-provider fallback system using *
+*Groq**, **Mistral**, and **Gemini**.
+
+## AI Infrastructure and Fallback System
+
+The application is designed for maximum reliability and cost-efficiency using a
+tiered fallback mechanism:
+
+1. **Groq (Primary):** Uses `llama-3.3-70b-versatile` for lightning-fast
+   responses.
+2. **Mistral (Secondary):** Falls back to `mistral-small-latest` if Groq is
+   unavailable.
+3. **Gemini (Tertiary):** Uses `gemini-2.0-flash-lite` as the final safety
+   layer.
+
+This architecture ensures that the chatbot remains responsive even if multiple
+AI providers experience downtime.
 
 ## Data Storage and Caching
 
-This application uses two main technologies for data storage and caching:
+- **Upstash Redis:** Used to cache responses from the AI models, improving
+  performance and reducing redundant API calls.
+- **AstraDB (Legacy/Inactive):** Previously used for Retrieval-Augmented
+  Generation (RAG) to store vector embeddings of Daoist texts.
 
-- **AstraDB:** We leverage AstraDB, a NoSQL database service from DataStax, to
-  store vector embeddings of text data. These embeddings enable efficient
-  comparison and retrieval of similar information, allowing the AI model to
-  provide relevant responses to user queries. You can learn more about AstraDB
-  at
-  [https://docs.datastax.com/en/astra-db-serverless/index.html](https://docs.datastax.com/en/astra-db-serverless/index.html)
-  .
-- **Please note:** We do not share any sensitive AstraDB credentials in this
-  documentation for security reasons.
-- **Upstash Redis:** Upstash Redis, a managed Redis service, is used to cache
-  responses from the AI model. This caching mechanism significantly improves
-  application performance by avoiding redundant calls to the model for
-  previously generated responses. Upstash Redis stores these cached responses,
-  allowing for faster retrieval when similar user queries are encountered. You
-  can find more information about Upstash Redis at
-  [https://upstash.com/docs/redis/overall/getstarted](https://upstash.com/docs/redis/overall/getstarted)
-  .
-- **Security Note:** Similar to AstraDB, we avoid sharing access credentials
-  for Upstash Redis in this documentation.
-
-## Local Development and Data Reset
-
-When running the application locally, the vector embeddings might be stored in
-a separate AstraDB collection compared to the production environment. This is
-a common practice to isolate development data and prevent conflicts.
-
-To reset the local vector embedding collection during development, you can run
-the command `npm run generate`. This script triggers a process that
-deletes the existing collection in local AstraDB instance and generates a
-new one, by populating it with fresh embeddings.
+> [!NOTE]
+> **RAG Feature Removal:** As of the latest migration, the RAG feature has been
+> removed to simplify the architecture and migrate away from tightly coupled AI
+> SDKs. The chatbot currently responds based on the broad knowledge of the modern
+> AI models.
+>
+> **How to restore RAG:**
+> 1. Re-implement the `src/lib/astradb.ts` utility using the
+     `@datastax/astra-db-ts` client.
+> 2. Update `scripts/generate.ts` to use the `getGeminiEmbedding` function from
+     `src/lib/ai/gemini.ts` (ensuring dimensions match your AstraDB collection,
+     e.g., 768 or 1536).
+> 3. Refactor `src/lib/ai.ts` to include a retrieval step (similarity search)
+     before generating the chat response.
 
 ## Getting Started
 
 ### 1. Prerequisites:
 
 - Node.js and npm (or yarn) installed on your system.
-- Basic understanding of Next.js and TypeScript concepts is recommended.
+- API Keys for Groq, Mistral, and Gemini.
 
 ### 2. Clone the repository:
 
@@ -63,17 +64,24 @@ git clone https://github.com/Turskyi/nextjs-laozi-chatbot.git
 ### 3. Install dependencies:
 
 ```bash
-cd Daoism-Laozi-AI-Web
-npm install  # or yarn install
-npm i langchain @langchain/google-genai ai clsx tailwind-merge ts-node dotenv lucide-react next-themes react-markdown @datastax/astra-db-ts @upstash/redis
+cd nextjs-laozi-chatbot
+npm install
 ```
 
-### 4. Run the development server:
+### 4. Configure Environment Variables:
+
+Create a `.env.local` file with the following:
+
+- `GROQ_API_KEY`
+- `MISTRAL_API_KEY`
+- `GEMINI_API_KEY`
+- `UPSTASH_REDIS_REST_URL`
+- `UPSTASH_REDIS_REST_TOKEN`
+
+### 5. Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the
@@ -82,122 +90,19 @@ result.
 ## Website:
 
 Visit the [Daoism • Laozi AI](https://daoizm.online/) to experience the
-interactive chatbot and explore Daoist teachings.
-
-## Features:
-
-- Engaging conversation with a Laozi-inspired AI chatbot.
-- Access to key Daoist teachings and philosophies.
-- Modern and user-friendly web interface.
+interactive chatbot.
 
 ## Tech Stack:
 
-- [Next.js](https://nextjs.org/): A React framework for building full-stack web
-  applications.
-- [Backend](https://nextjs.org/docs/app/building-your-application/routing/route-handlers):
-  Next.js Route Handlers allow you to create custom request handlers for a given
-  route using the Web Request and Response APIs.
-- **Programming language**: [TypeScript](https://www.typescriptlang.org);
-- **Tailwind CSS**: A utility-first CSS framework for rapidly building custom
-  designs.
-- [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to
-  automatically optimize and load Inter, a custom Google Font.
-- **Version control system**: [Git](https://git-scm.com);
-- **Git Hosting Service**: [GitHub](https://github.com);
-- **CI/CD**: [Vercel](https://vercel.com/features/previews) is used to
-  deliver the new releases to the production environment after every push to the
-  **master** branch;
-- **Architectural pattern** :
-  [Monolith](https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/common-web-application-architectures#all-in-one-applications);
-- **Code Readability:** code is easily readable with no unnecessary blank lines,
-  no unused variables or methods, and no commented-out code, all variables,
-  methods, and resource IDs are descriptively named such that another developer
-  reading the code can easily understand their function.
-
-## Project Structure:
-
-```text
-Daoism-Laozi-AI-Web/
-├── public/       # Static assets (images, fonts, etc.)
-│   └── ...
-└── src/           # Project source code
-    ├── app/        # Application pages
-    │   ├── about/   # About page content
-    │   │   └── ...
-    │   ├── privacy/  # Privacy policy content
-    │   │   └── ...
-    │   └── social/   # Social channels content
-    │       └── ...
-    ├── assets/      # Application-specific assets (images, etc.)
-    │   └── ...
-    ├── components/  # Reusable UI components
-    │   └── ui/        # UI component subfolder
-    │       └── ...
-    ├── lib/         # Custom logic or utility functions
-    │   └── ...
-    ├── constants.ts # Application-wide constants
-    └── README.md    # Project documentation
-```
-
-## Scripts:
-
-- `npm run dev` (or `yarn dev`): Starts the development server.
-- `npm run build` (or `yarn build`): Creates an optimized production build.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js
-  features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-## Deployment:
-
-This project can be deployed to any platform that supports Next.js applications.
-Refer to the Next.js documentation for deployment instructions:
-https://nextjs.org/docs/pages/building-your-application/deploying
-The easiest way to deploy your Next.js app is to use the
-[Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme)
-from the creators of Next.js.
-
-## Contributing
-
-We welcome contributions! Fork this repository, make your enhancements, and
-submit a pull request.
-
-## Contact:
-
-For any questions or feedback, please feel free to create an issue in this
-repository.
-
-## Screenshot:
-
-<!--suppress CheckImageSize -->
-<img src="screenshots/web-home-2024-06-24.png" width="700"  alt="screenshot">
-
-## Links & Resources
-
-- **Main Website:** [daoizm.online](https://daoizm.online/)  
-  _(Note: This domain may expire in the future. For a permanent alternative, use
-  [laozi-chatbot.vercel.app](https://laozi-chatbot.vercel.app))_
-- **Project Board:**
-  [GitHub Project Board](https://github.com/users/Turskyi/projects/17)
-- **Mobile Apps:**
-  - [Android (Google Play)](https://play.google.com/store/apps/details?id=com.turskyi.laozi_ai)
-  - [iOS (App Store)](https://apps.apple.com/ca/app/daoism-laozi-ai/id6743682937)
-  - [Mobile App Source Code (Flutter)](https://github.com/Turskyi/flutter_laozi_ai)
-- **Web Versions:**
-  - [Web version (Vercel, permanent)](https://laozi-chatbot.vercel.app)
-  - [Web version (Firebase, Flutter-based)](https://laozi-ai.web.app)
-- **Developer:** Dmytro Turskyi ([turskyi.com](https://turskyi.com))  
-  _Single developer and maintainer of this project._
+- **Frontend:** Next.js 14, React, Tailwind CSS, DaisyUI.
+- **AI Orchestration:** Vercel AI SDK.
+- **Providers:** Groq, Mistral, Google Gemini.
+- **Database/Cache:** Upstash Redis (AstraDB for vector storage - currently
+  legacy).
 
 ## Credits
 
-This project is based on the
-[Build a SMART Portfolio Website (Next.js 14, Langchain, Vercel AI SDK, OpenAI API, Tailwind CSS)](https://youtu.be/1LZltsK5nKI?si=wdvbyJh6RZLzFaxK)
-by [Coding in Flow](https://github.com/codinginflow) YouTube channel.
-All credit goes to the original author
-[Florian Walther](https://github.com/florianwalther-private).
-I only followed along and made some minor changes.
+This project was originally inspired by the
+[SMART Portfolio Website tutorial](https://youtu.be/1LZltsK5nKI?si=wdvbyJh6RZLzFaxK)
+by [Coding in Flow](https://github.com/codinginflow). It has since been heavily
+refactored into a resilient multi-provider AI system.
