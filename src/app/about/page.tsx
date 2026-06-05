@@ -15,7 +15,7 @@ export default function Page() {
     <section className="space-y-6">
       <H1>About Daoism and Laozi Chatbot</H1>
       <section className="space-y-3">
-        <H2>Welcome to Daoizm.online!</H2>
+        <H2>Welcome to &ldquo;Daosim Online&ldquo;!</H2>
         <p>
           {DOMAIN} is a website dedicated to exploring the wisdom of Daoism and
           the teachings of Laozi. Through this platform, you can interact with

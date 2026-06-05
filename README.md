@@ -8,8 +8,8 @@
 
 This project is a web-based chatbot application that leverages the wisdom of
 Laozi and Daoist teachings to provide users with guidance and insights. It is
-built using Next.js and a resilient, triple-provider fallback system using *
-*Groq**, **Mistral**, and **Gemini**.
+built using Next.js and a resilient, triple-provider fallback system using \*
+\*Groq**, **Mistral**, and **Gemini\*\*.
 
 ## AI Infrastructure and Fallback System
 
@@ -40,12 +40,18 @@ AI providers experience downtime.
 > AI models.
 >
 > **How to restore RAG:**
+>
 > 1. Re-implement the `src/lib/astradb.ts` utility using the
+
      `@datastax/astra-db-ts` client.
+
 > 2. Update `scripts/generate.ts` to use the `getGeminiEmbedding` function from
+
      `src/lib/ai/gemini.ts` (ensuring dimensions match your AstraDB collection,
      e.g., 768 or 1536).
+
 > 3. Refactor `src/lib/ai.ts` to include a retrieval step (similarity search)
+
      before generating the chat response.
 
 ## Getting Started
@@ -89,7 +95,7 @@ result.
 
 ## Website:
 
-Visit the [Daoism • Laozi AI](https://daoizm.online/) to experience the
+Visit the [Daoism • Laozi AI](https://daoismonline.com) to experience the
 interactive chatbot.
 
 ## Tech Stack:

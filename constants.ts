@@ -3,13 +3,13 @@ export const APP_NAME_UA = 'Даосизм • чат-бот Лао-цзи';
 export const APP_NAME_LV = 'Daoisms • Laodzi MI';
 export const CHAT_NAME = 'Laozi Chatbot';
 
-// Expiration Jun 8, 2026 - auto-renew is off
-export const DOMAIN = 'daoizm.online';
+// Expires: June 5, 2027 - auto-renew is on
+export const DOMAIN = 'daoismonline.com';
 export const WEBSITE = 'https://' + DOMAIN;
 export const AUTHOR = 'Dmytro Turskyi';
 
-// Expiration Jun 8, 2026 - auto-renew is off
-export const RESEND_DOMAIN = 'daoizm.online';
+// Expires: June 5, 2027 - auto-renew is on
+export const RESEND_DOMAIN = 'daoismonline.com';
 
 //TODO: replace these links
 export const FACEBOOK = 'https://www.facebook.com/LaoziPhilosopher';
