@@ -8,7 +8,7 @@ export async function getGeminiResponse(messages: any[]) {
   const otherMessages = messages.filter((m) => m.role !== 'system');
 
   const model = genAI.getGenerativeModel({
-    model: 'gemini-2.0-flash-lite',
+    model: 'gemini-3.5-flash-lite',
     systemInstruction: systemMessage,
   });
 

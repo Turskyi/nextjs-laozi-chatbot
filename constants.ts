@@ -33,9 +33,9 @@ export const API_ENDPOINTS = {
 } as const;
 
 export const AI_MODEL_NAMES = {
-  GROQ: 'llama-3.3-70b-versatile',
+  GROQ: 'qwen/qwen3.6-27b',
   MISTRAL: 'mistral-small-latest',
-  GEMINI: 'gemini-2.0-flash-lite',
+  GEMINI: 'gemini-3.5-flash-lite',
 } as const;
 
 export const ROLES = {

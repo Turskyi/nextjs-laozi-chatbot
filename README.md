@@ -16,11 +16,11 @@ built using Next.js and a resilient, triple-provider fallback system using \*
 The application is designed for maximum reliability and cost-efficiency using a
 tiered fallback mechanism:
 
-1. **Groq (Primary):** Uses `llama-3.3-70b-versatile` for lightning-fast
+1. **Groq (Primary):** Uses `qwen/qwen3.6-27b` for lightning-fast
    responses.
 2. **Mistral (Secondary):** Falls back to `mistral-small-latest` if Groq is
    unavailable.
-3. **Gemini (Tertiary):** Uses `gemini-2.0-flash-lite` as the final safety
+3. **Gemini (Tertiary):** Uses `gemini-3.5-flash-lite` as the final safety
    layer.
 
 This architecture ensures that the chatbot remains responsive even if multiple
