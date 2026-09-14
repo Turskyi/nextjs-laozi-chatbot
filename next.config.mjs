@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+console.log('Build Runtime Node Version:', process.version);
 const nextConfig = {
   images: {
     dangerouslyAllowSVG: true,
