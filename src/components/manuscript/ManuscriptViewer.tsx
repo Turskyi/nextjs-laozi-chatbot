@@ -30,9 +30,13 @@ export default function ManuscriptViewer({ currentPage }: ManuscriptViewerProps)
 
   const prevPageNum = pageNum - 1;
   const nextPageNum = pageNum + 1;
+  const pieces = currentPage.pieces ?? [
+    { imageSrc: currentPage.imageSrc, caption: currentPage.caption },
+  ];
 
   // State
   const [fullscreen, setFullscreen] = useState<'none' | 'manuscript' | 'text'>('none');
+  const [fullscreenPiece, setFullscreenPiece] = useState(0);
   const [fontScale, setFontScale] = useState<number>(1);
 
   // Read initial fullscreen state from query params if available
@@ -42,6 +46,7 @@ export default function ManuscriptViewer({ currentPage }: ManuscriptViewerProps)
       const fs = params.get('fullscreen');
       if (fs === 'manuscript' || fs === 'text') {
         setFullscreen(fs);
+        setFullscreenPiece(Math.max(0, Number(params.get('piece')) || 0));
       }
     }
   }, []);
@@ -49,17 +54,22 @@ export default function ManuscriptViewer({ currentPage }: ManuscriptViewerProps)
   // Navigation handlers that preserve fullscreen state during page transitions
   const handleNavigate = useCallback(
     (targetPage: number) => {
-      const query = fullscreen !== 'none' ? `?fullscreen=${fullscreen}` : '';
+      const query = fullscreen !== 'none'
+        ? `?fullscreen=${fullscreen}${fullscreen === 'manuscript' ? `&piece=${fullscreenPiece}` : ''}`
+        : '';
       router.push(`/manuscript/${targetPage}${query}`);
     },
-    [fullscreen, router],
+    [fullscreen, fullscreenPiece, router],
   );
 
   const handleToggleFullscreen = useCallback(
-    (mode: 'manuscript' | 'text') => {
+    (mode: 'manuscript' | 'text', pieceIndex = 0) => {
       const nextMode = fullscreen === mode ? 'none' : mode;
       setFullscreen(nextMode);
-      const query = nextMode !== 'none' ? `?fullscreen=${nextMode}` : '';
+      setFullscreenPiece(pieceIndex);
+      const query = nextMode !== 'none'
+        ? `?fullscreen=${nextMode}${nextMode === 'manuscript' ? `&piece=${pieceIndex}` : ''}`
+        : '';
       router.push(`/manuscript/${pageNum}${query}`, { scroll: false });
     },
     [fullscreen, pageNum, router],
@@ -178,22 +188,27 @@ export default function ManuscriptViewer({ currentPage }: ManuscriptViewerProps)
 
       {/* Main Split Screen View */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:items-stretch">
-        {/* Left Side: Zoomable Manuscript Image Panel */}
-        <div className="w-full flex flex-col h-full">
-          <ZoomableImage
-            src={currentPage.imageSrc}
-            alt={`Manuscript scan - ${currentPage.title}`}
-            caption={currentPage.caption}
-            isFullscreen={fullscreen === 'manuscript'}
-            onToggleFullscreen={() => handleToggleFullscreen('manuscript')}
-            hasPrev={hasPrev}
-            hasNext={hasNext}
-            pageNum={pageNum}
-            totalPages={totalPages}
-            onPrev={() => handleNavigate(prevPageNum)}
-            onNext={() => handleNavigate(nextPageNum)}
-            onSelectPage={(p) => handleNavigate(p)}
-          />
+        {/* Left Side: one or two independently controlled manuscript pieces */}
+        <div className="w-full flex flex-col gap-6 h-full">
+          {pieces.map((piece, pieceIndex) => (
+            <ZoomableImage
+              key={piece.imageSrc}
+              src={piece.imageSrc}
+              alt={`Manuscript scan - ${currentPage.title}, piece ${pieceIndex + 1}`}
+              caption={piece.caption}
+              isFullscreen={
+                fullscreen === 'manuscript' && (fullscreenPiece === pieceIndex || pieces.length === 1)
+              }
+              onToggleFullscreen={() => handleToggleFullscreen('manuscript', pieceIndex)}
+              hasPrev={hasPrev}
+              hasNext={hasNext}
+              pageNum={pageNum}
+              totalPages={totalPages}
+              onPrev={() => handleNavigate(prevPageNum)}
+              onNext={() => handleNavigate(nextPageNum)}
+              onSelectPage={(p) => handleNavigate(p)}
+            />
+          ))}
         </div>
 
         {/* Right Side: English Text Panel */}
@@ -349,6 +364,11 @@ export default function ManuscriptViewer({ currentPage }: ManuscriptViewerProps)
                         <span className="font-semibold">Note:</span> this page continues the preface from page 2 — not from page 1. Read right to left: the rightmost columns pick up where page 2&apos;s leftmost columns ended.
                       </div>
                     )}
+                    {pageNum === 7 && (
+                      <div className="mb-4 rounded-lg bg-amber-500/10 border border-amber-500/25 p-3 text-xs sm:text-sm text-amber-900 dark:text-amber-200 leading-relaxed font-sans">
+                        <span className="font-semibold">Note:</span> the two manuscript images on this page come from two different manuscripts — Pelliot chinois 2584 and Pelliot chinois 2255 (Bibliothèque nationale de France). Both are among the oldest surviving copies of the Daodejing, so both are shown here alongside the same English text.
+                      </div>
+                    )}
                     {currentPage.content.split('\n\n').map((paragraph, idx) => {
                       const isChapterHeading = /^Chapter\s+\d+/i.test(paragraph.trim());
                       return (
@@ -365,14 +385,14 @@ export default function ManuscriptViewer({ currentPage }: ManuscriptViewerProps)
                     })}
                   </div>
 
-                  {/* End of Page 3 indicator or Next page link in Fullscreen */}
+                  {/* Final-page indicator or next-page link in Fullscreen */}
                   {currentPage.isLastPage ? (
                     <div className="mt-8 pt-4 border-t border-border flex items-center gap-2.5 rounded-lg bg-muted/50 p-3 text-sm text-muted-foreground">
                       <span className="relative flex h-2.5 w-2.5">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
                         <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500"></span>
                       </span>
-                      <span className="font-medium italic">…in development</span>
+                      <span className="font-medium italic">End of the manuscript reader</span>
                     </div>
                   ) : (
                     <div className="mt-8 pt-4 border-t border-border flex justify-end">
@@ -466,6 +486,11 @@ export default function ManuscriptViewer({ currentPage }: ManuscriptViewerProps)
                       <span className="font-semibold">Note:</span> this page continues the preface from page 2 — not from page 1. Read right to left: the rightmost columns pick up where page 2&apos;s leftmost columns ended.
                     </div>
                   )}
+                  {pageNum === 7 && (
+                    <div className="mb-4 rounded-lg bg-amber-500/10 border border-amber-500/25 p-3 text-xs sm:text-sm text-amber-900 dark:text-amber-200 leading-relaxed font-sans">
+                      <span className="font-semibold">Note:</span> the two manuscript images on this page come from two different manuscripts — Pelliot chinois 2584 and Pelliot chinois 2255 (Bibliothèque nationale de France). Both are among the oldest surviving copies of the Daodejing, so both are shown here alongside the same English text.
+                    </div>
+                  )}
                   {currentPage.content.split('\n\n').map((paragraph, idx) => {
                     const isChapterHeading = /^Chapter\s+\d+/i.test(paragraph.trim());
                     return (
@@ -483,14 +508,14 @@ export default function ManuscriptViewer({ currentPage }: ManuscriptViewerProps)
                 </div>
               </div>
 
-              {/* End of Page 3 indicator or Next page link */}
+              {/* Final-page indicator or next-page link */}
               {currentPage.isLastPage ? (
                 <div className="mt-8 pt-4 border-t border-border flex items-center gap-2.5 rounded-lg bg-muted/50 p-3 text-sm text-muted-foreground">
                   <span className="relative flex h-2.5 w-2.5">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500"></span>
                   </span>
-                  <span className="font-medium italic">…in development</span>
+                  <span className="font-medium italic">End of the manuscript reader</span>
                 </div>
               ) : (
                 <div className="mt-8 pt-4 border-t border-border flex justify-end">

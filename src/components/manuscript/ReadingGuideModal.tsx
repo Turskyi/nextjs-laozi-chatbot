@@ -109,6 +109,9 @@ export default function ReadingGuideModal({ isOpen, onClose }: ReadingGuideModal
         <p className="text-sm text-muted-foreground leading-relaxed">
           This is a Chinese handscroll manuscript. Read each page top to bottom, starting with the rightmost column and moving left — the opposite of Western books. Pages follow the order of the original scroll, and consecutive scans overlap slightly: the last columns of one page repeat at the start of the next, so you never lose your place.
         </p>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          Pages 7–10 show pieces from two different manuscripts side by side — both witness the same chapters.
+        </p>
 
         {/* Footer / Action */}
         <div className="flex justify-end pt-2">
