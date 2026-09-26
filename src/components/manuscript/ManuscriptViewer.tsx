@@ -96,7 +96,7 @@ export default function ManuscriptViewer({ currentPage }: ManuscriptViewerProps)
   };
 
   return (
-    <div className="space-y-6 animate-fadeIn pb-12">
+    <div className="relative left-1/2 w-screen max-w-[100rem] -translate-x-1/2 space-y-6 px-4 pb-12 animate-fadeIn sm:px-6">
       {/* Top Header & Page Selector Bar (Normal View) */}
       <div className="flex flex-col gap-4 rounded-xl bg-card p-4 sm:p-5 border border-border shadow-sm sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -130,10 +130,10 @@ export default function ManuscriptViewer({ currentPage }: ManuscriptViewerProps)
           )}
 
           {/* Page Indicator */}
-          <div className="flex items-center gap-1.5 px-2">
+          <div className="flex flex-wrap items-center gap-1.5 px-2">
             <Layers className="h-4 w-4 text-muted-foreground hidden xs:inline" />
             <span className="text-xs font-medium text-muted-foreground">Page</span>
-            <div className="flex gap-1">
+            <div className="flex flex-wrap gap-1">
               {MANUSCRIPT_PAGES.map((p) => {
                 const isActive = p.pageNumber === pageNum;
                 return (
@@ -218,11 +218,11 @@ export default function ManuscriptViewer({ currentPage }: ManuscriptViewerProps)
                     <span className="hidden xs:inline">Prev</span>
                   </Button>
 
-                  <div className="flex items-center gap-1">
+                  <div className="flex flex-wrap items-center gap-1">
                     <span className="text-xs font-medium text-muted-foreground hidden sm:inline">
                       Page
                     </span>
-                    <div className="flex gap-1">
+                    <div className="flex flex-wrap gap-1">
                       {MANUSCRIPT_PAGES.map((p) => {
                         const isActive = p.pageNumber === pageNum;
                         return (
@@ -334,15 +334,35 @@ export default function ManuscriptViewer({ currentPage }: ManuscriptViewerProps)
                   </div>
 
                   <div className="prose dark:prose-invert max-w-none">
-                    {currentPage.content.split('\n\n').map((paragraph, idx) => (
-                      <p
-                        key={idx}
-                        style={{ fontSize: `${(fontScale * 1.125).toFixed(3)}rem` }}
-                        className="leading-relaxed text-foreground whitespace-pre-line font-serif transition-[font-size] duration-150"
-                      >
-                        {paragraph}
-                      </p>
-                    ))}
+                    {pageNum === 1 && (
+                      <div className="mb-4 rounded-lg bg-amber-500/10 border border-amber-500/25 p-3 text-xs sm:text-sm text-amber-900 dark:text-amber-200 leading-relaxed font-sans">
+                        <span className="font-semibold">Note:</span> this manuscript is read right to left. This title leaf physically belongs at the end of the scroll — after page 10 — where it served as the cover. The manuscript itself begins on page 2. It is shown here first only for readers used to left-to-right books, who would otherwise encounter the first page last.
+                      </div>
+                    )}
+                    {pageNum === 2 && (
+                      <div className="mb-4 rounded-lg bg-amber-500/10 border border-amber-500/25 p-3 text-xs sm:text-sm text-amber-900 dark:text-amber-200 leading-relaxed font-sans">
+                        <span className="font-semibold">Note:</span> this scan ends in the middle of the preface. Even though the manuscript may look finished here, the preface continues on the next page.
+                      </div>
+                    )}
+                    {pageNum === 3 && (
+                      <div className="mb-4 rounded-lg bg-amber-500/10 border border-amber-500/25 p-3 text-xs sm:text-sm text-amber-900 dark:text-amber-200 leading-relaxed font-sans">
+                        <span className="font-semibold">Note:</span> this page continues the preface from page 2 — not from page 1. Read right to left: the rightmost columns pick up where page 2&apos;s leftmost columns ended.
+                      </div>
+                    )}
+                    {currentPage.content.split('\n\n').map((paragraph, idx) => {
+                      const isChapterHeading = /^Chapter\s+\d+/i.test(paragraph.trim());
+                      return (
+                        <p
+                          key={idx}
+                          style={{ fontSize: `${(fontScale * 1.125).toFixed(3)}rem` }}
+                          className={`leading-relaxed text-foreground whitespace-pre-line font-serif transition-[font-size] duration-150 ${
+                            isChapterHeading ? 'mt-6 sm:mt-8' : ''
+                          }`}
+                        >
+                          {paragraph}
+                        </p>
+                      );
+                    })}
                   </div>
 
                   {/* End of Page 3 indicator or Next page link in Fullscreen */}
@@ -431,15 +451,35 @@ export default function ManuscriptViewer({ currentPage }: ManuscriptViewerProps)
                 </div>
 
                 <div className="prose dark:prose-invert max-w-none">
-                  {currentPage.content.split('\n\n').map((paragraph, idx) => (
-                    <p
-                      key={idx}
-                      style={{ fontSize: `${(fontScale * 1.125).toFixed(3)}rem` }}
-                      className="leading-relaxed text-foreground whitespace-pre-line font-serif transition-[font-size] duration-150"
-                    >
-                      {paragraph}
-                    </p>
-                  ))}
+                  {pageNum === 1 && (
+                    <div className="mb-4 rounded-lg bg-amber-500/10 border border-amber-500/25 p-3 text-xs sm:text-sm text-amber-900 dark:text-amber-200 leading-relaxed font-sans">
+                      <span className="font-semibold">Note:</span> this manuscript is read right to left. This title leaf physically belongs at the end of the scroll — after page 10 — where it served as the cover. The manuscript itself begins on page 2. It is shown here first only for readers used to left-to-right books, who would otherwise encounter the first page last.
+                    </div>
+                  )}
+                  {pageNum === 2 && (
+                    <div className="mb-4 rounded-lg bg-amber-500/10 border border-amber-500/25 p-3 text-xs sm:text-sm text-amber-900 dark:text-amber-200 leading-relaxed font-sans">
+                      <span className="font-semibold">Note:</span> this scan ends in the middle of the preface. Even though the manuscript may look finished here, the preface continues on the next page.
+                    </div>
+                  )}
+                  {pageNum === 3 && (
+                    <div className="mb-4 rounded-lg bg-amber-500/10 border border-amber-500/25 p-3 text-xs sm:text-sm text-amber-900 dark:text-amber-200 leading-relaxed font-sans">
+                      <span className="font-semibold">Note:</span> this page continues the preface from page 2 — not from page 1. Read right to left: the rightmost columns pick up where page 2&apos;s leftmost columns ended.
+                    </div>
+                  )}
+                  {currentPage.content.split('\n\n').map((paragraph, idx) => {
+                    const isChapterHeading = /^Chapter\s+\d+/i.test(paragraph.trim());
+                    return (
+                      <p
+                        key={idx}
+                        style={{ fontSize: `${(fontScale * 1.125).toFixed(3)}rem` }}
+                        className={`leading-relaxed text-foreground whitespace-pre-line font-serif transition-[font-size] duration-150 ${
+                          isChapterHeading ? 'mt-6 sm:mt-8' : ''
+                        }`}
+                      >
+                        {paragraph}
+                      </p>
+                    );
+                  })}
                 </div>
               </div>
 

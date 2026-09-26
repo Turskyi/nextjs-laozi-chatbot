@@ -1,9 +1,8 @@
-'use client';
-
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { ZoomIn, ZoomOut, RotateCcw, Maximize2, Minimize2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ZoomIn, ZoomOut, RotateCcw, Maximize2, Minimize2, ChevronLeft, ChevronRight, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { MANUSCRIPT_PAGES } from '@/data/manuscriptData';
+import ReadingGuideModal from './ReadingGuideModal';
 
 interface ZoomableImageProps {
   src: string;
@@ -35,6 +34,7 @@ export default function ZoomableImage({
   onSelectPage,
 }: ZoomableImageProps) {
   const [scale, setScale] = useState<number>(1);
+  const [isGuideOpen, setIsGuideOpen] = useState<boolean>(false);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [dragStart, setDragStart] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [scrollStart, setScrollStart] = useState<{ left: number; top: number }>({
@@ -151,11 +151,11 @@ export default function ZoomableImage({
                 <span className="hidden xs:inline">Prev</span>
               </Button>
 
-              <div className="flex items-center gap-1">
+              <div className="flex flex-wrap items-center gap-1">
                 <span className="text-xs font-medium text-muted-foreground hidden sm:inline">
                   Page
                 </span>
-                <div className="flex gap-1">
+                <div className="flex flex-wrap gap-1">
                   {MANUSCRIPT_PAGES.map((p) => {
                     const isActive = p.pageNumber === pageNum;
                     return (
@@ -235,18 +235,33 @@ export default function ZoomableImage({
               </Button>
             </div>
 
-            {/* Right: Exit Fullscreen */}
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={onToggleFullscreen}
-              title="Exit Fullscreen (Esc)"
-              className="h-8 gap-1.5 text-xs font-medium"
-            >
-              <Minimize2 className="h-3.5 w-3.5" />
-              <span>Exit</span>
-            </Button>
+            {/* Right: Reading guide & Exit Fullscreen */}
+            <div className="flex items-center gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setIsGuideOpen(true)}
+                title="Reading guide"
+                aria-label="Reading guide"
+                className="h-8 px-2.5 text-xs gap-1.5"
+              >
+                <Info className="h-3.5 w-3.5 text-primary" />
+                <span className="hidden xs:inline">Reading guide</span>
+              </Button>
+
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={onToggleFullscreen}
+                title="Exit Fullscreen (Esc)"
+                className="h-8 gap-1.5 text-xs font-medium"
+              >
+                <Minimize2 className="h-3.5 w-3.5" />
+                <span>Exit</span>
+              </Button>
+            </div>
           </div>
         ) : (
           /* NORMAL EMBEDDED HEADER BAR */
@@ -302,6 +317,18 @@ export default function ZoomableImage({
                 type="button"
                 variant="outline"
                 size="sm"
+                onClick={() => setIsGuideOpen(true)}
+                title="Reading guide"
+                aria-label="Reading guide"
+                className="h-8 px-2.5 text-xs gap-1.5"
+              >
+                <Info className="h-3.5 w-3.5 text-primary" />
+                <span className="hidden xs:inline">Reading guide</span>
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
                 onClick={onToggleFullscreen}
                 title="Fullscreen"
                 aria-label="Fullscreen"
@@ -352,6 +379,8 @@ export default function ZoomableImage({
           {caption}
         </div>
       </div>
+
+      <ReadingGuideModal isOpen={isGuideOpen} onClose={() => setIsGuideOpen(false)} />
     </div>
   );
 }
