@@ -1,4 +1,5 @@
 import { Mistral } from '@mistralai/mistralai';
+import { AI_MODEL_NAMES } from '../../../constants';
 
 const mistral = new Mistral({
   apiKey: process.env.MISTRAL_API_KEY,
@@ -6,7 +7,7 @@ const mistral = new Mistral({
 
 export async function getMistralResponse(messages: any[]) {
   const stream = await mistral.chat.stream({
-    model: 'mistral-small-latest',
+    model: AI_MODEL_NAMES.MISTRAL,
     messages,
   });
 

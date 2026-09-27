@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { AI_MODEL_NAMES } from '../../../constants';
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
@@ -8,7 +9,7 @@ export async function getGeminiResponse(messages: any[]) {
   const otherMessages = messages.filter((m) => m.role !== 'system');
 
   const model = genAI.getGenerativeModel({
-    model: 'gemini-3.5-flash-lite',
+    model: AI_MODEL_NAMES.GEMINI,
     systemInstruction: systemMessage,
   });
 
@@ -27,7 +28,7 @@ export async function getGeminiResponse(messages: any[]) {
 }
 
 export async function getGeminiEmbedding(text: string, targetDimension: number = 1536) {
-  const model = genAI.getGenerativeModel({ model: 'gemini-embedding-001' });
+  const model = genAI.getGenerativeModel({ model: AI_MODEL_NAMES.GEMINI_EMBEDDING });
   const result = await model.embedContent(text);
   const embedding = result.embedding.values;
 

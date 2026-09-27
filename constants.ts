@@ -33,10 +33,14 @@ export const API_ENDPOINTS = {
 } as const;
 
 export const AI_MODEL_NAMES = {
-  GROQ: 'qwen/qwen3.6-27b',
+  GROQ: 'qwen/qwen3.8-27b',
+  OPENROUTER: 'deepseek/deepseek-chat',
   MISTRAL: 'mistral-small-latest',
   GEMINI: 'gemini-3.5-flash-lite',
+  GEMINI_EMBEDDING: 'gemini-embedding-001',
 } as const;
+
+export type AIModelName = typeof AI_MODEL_NAMES[keyof typeof AI_MODEL_NAMES];
 
 export const ROLES = {
   USER: 'user',

@@ -3,6 +3,7 @@ import { getGroqResponse } from './ai/groq';
 import { getOpenRouterResponse } from './ai/openrouter';
 import { getMistralResponse } from './ai/mistral';
 import { getGeminiResponse } from './ai/gemini';
+import { AI_MODEL_NAMES } from '../../constants';
 
 export async function generateChatResponse(messages: any[]) {
   // 1. Attempt Groq
@@ -10,7 +11,7 @@ export async function generateChatResponse(messages: any[]) {
     const response = await getGroqResponse(messages);
     const stream = OpenAIStream(response);
     return new StreamingTextResponse(stream, {
-      headers: { 'X-AI-Model': 'Groq (qwen/qwen3.8-27b)' },
+      headers: { 'X-AI-Model': `Groq (${AI_MODEL_NAMES.GROQ})` },
     });
   } catch (error) {
     console.warn('Groq failed, falling back to OpenRouter:', error);
@@ -21,7 +22,7 @@ export async function generateChatResponse(messages: any[]) {
     const response = await getOpenRouterResponse(messages);
     const stream = OpenAIStream(response as any);
     return new StreamingTextResponse(stream, {
-      headers: { 'X-AI-Model': 'OpenRouter (deepseek/deepseek-chat)' },
+      headers: { 'X-AI-Model': `OpenRouter (${AI_MODEL_NAMES.OPENROUTER})` },
     });
   } catch (error) {
     console.warn('OpenRouter failed, falling back to Mistral:', error);
@@ -32,7 +33,7 @@ export async function generateChatResponse(messages: any[]) {
     const response = await getMistralResponse(messages);
     const stream = OpenAIStream(response as any);
     return new StreamingTextResponse(stream, {
-      headers: { 'X-AI-Model': 'Mistral (mistral-small-latest)' },
+      headers: { 'X-AI-Model': `Mistral (${AI_MODEL_NAMES.MISTRAL})` },
     });
   } catch (error) {
     console.warn('Mistral failed, falling back to Gemini:', error);
@@ -43,7 +44,7 @@ export async function generateChatResponse(messages: any[]) {
     const result = await getGeminiResponse(messages);
     const aiStream = GoogleGenerativeAIStream(result);
     return new StreamingTextResponse(aiStream, {
-      headers: { 'X-AI-Model': 'Gemini (gemini-3.5-flash-lite)' },
+      headers: { 'X-AI-Model': `Gemini (${AI_MODEL_NAMES.GEMINI})` },
     });
   } catch (error) {
     console.error('All AI providers failed:', error);
