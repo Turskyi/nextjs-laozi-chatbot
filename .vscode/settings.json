@@ -31,5 +31,6 @@
     "dotenv": {
       "parser": "plain"
     }
-  }
+  },
+  "CodeGPT.apiKey": "CodeGPT Plus Beta"
 }

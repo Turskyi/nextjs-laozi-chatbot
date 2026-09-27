@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import {
   ChevronLeft,
   ChevronRight,
@@ -11,10 +10,13 @@ import {
   Maximize2,
   Minimize2,
   RotateCcw,
+  Search,
 } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { ManuscriptPageData, MANUSCRIPT_PAGES } from '@/data/manuscriptData';
 import ZoomableImage from './ZoomableImage';
 import { Button } from '@/components/ui/button';
+import SearchModal from '../search/SearchModal';
 
 interface ManuscriptViewerProps {
   currentPage: ManuscriptPageData;
@@ -38,6 +40,9 @@ export default function ManuscriptViewer({ currentPage }: ManuscriptViewerProps)
   const [fullscreen, setFullscreen] = useState<'none' | 'manuscript' | 'text'>('none');
   const [fullscreenPiece, setFullscreenPiece] = useState(0);
   const [fontScale, setFontScale] = useState<number>(1);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const searchParams = useSearchParams();
+  const searchQuery = searchParams.get('search');
 
   // Read initial fullscreen state from query params if available
   useEffect(() => {
@@ -92,6 +97,18 @@ export default function ManuscriptViewer({ currentPage }: ManuscriptViewerProps)
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [hasPrev, hasNext, prevPageNum, nextPageNum, fullscreen, pageNum, handleNavigate, router]);
 
+  // Auto-scroll to highlight when search query is present
+  useEffect(() => {
+    if (searchQuery) {
+      setTimeout(() => {
+        const highlighted = document.querySelector('.bg-amber-400');
+        if (highlighted) {
+          highlighted.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
+    }
+  }, [searchQuery, pageNum]);
+
   // Font Size Adjustments
   const handleFontIncrease = () => {
     setFontScale((prev) => Math.min(Number((prev + 0.15).toFixed(2)), 1.45));
@@ -121,6 +138,18 @@ export default function ManuscriptViewer({ currentPage }: ManuscriptViewerProps)
 
         {/* Navigation Controls */}
         <div className="flex items-center gap-2 self-stretch sm:self-auto justify-between sm:justify-end">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => setIsSearchOpen(true)}
+            className="gap-1"
+            title="Search Translation"
+          >
+            <Search className="h-4 w-4" />
+            <span className="hidden sm:inline">Search</span>
+          </Button>
+
           {hasPrev ? (
             <Button
               type="button"
@@ -505,7 +534,15 @@ export default function ManuscriptViewer({ currentPage }: ManuscriptViewerProps)
                           isChapterHeading ? 'mt-6 sm:mt-8' : ''
                         }`}
                       >
-                        {paragraph}
+                        {searchQuery ? (
+                          paragraph.split(new RegExp(`(${searchQuery})`, 'gi')).map((part, i) =>
+                            part.toLowerCase() === searchQuery.toLowerCase()
+                              ? <span key={i} className="bg-amber-400 dark:bg-amber-600 text-foreground px-0.5 rounded">{part}</span>
+                              : part
+                          )
+                        ) : (
+                          paragraph
+                        )}
                       </p>
                     );
                   })}
@@ -568,6 +605,8 @@ export default function ManuscriptViewer({ currentPage }: ManuscriptViewerProps)
           </Button>
         )}
       </div>
+
+      <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </div>
   );
 }
