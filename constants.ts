@@ -20,16 +20,16 @@ export const YOUTUBE =
 export const YOUTUBE_SHORTS = 'https://www.youtube.com/@George-Thompson/shorts';
 
 export const API_ENDPOINTS = {
-  CHAT: 'api/chat',
-  CHAT_ANDROID_EN: 'api/chat-android-en',
-  CHAT_ANDROID_UA: 'api/chat-android-ua',
-  CHAT_IOS_EN: 'api/chat-ios-en',
-  CHAT_IOS_UA: 'api/chat-ios-ua',
-  CHAT_UA: 'api/chat-ua',
-  CHAT_WEB_APP_EN: ' api/chat-web-app-en',
-  CHAT_WEB_APP_UA: 'api/chat-web-app-ua',
-  CHAT_WEB_EN: 'api/chat-web-en',
-  SEND: 'api/send',
+  CHAT: '/api/chat',
+  CHAT_ANDROID_EN: '/api/chat-android-en',
+  CHAT_ANDROID_UA: '/api/chat-android-ua',
+  CHAT_IOS_EN: '/api/chat-ios-en',
+  CHAT_IOS_UA: '/api/chat-ios-ua',
+  CHAT_UA: '/api/chat-ua',
+  CHAT_WEB_APP_EN: '/api/chat-web-app-en',
+  CHAT_WEB_APP_UA: '/api/chat-web-app-ua',
+  CHAT_WEB_EN: '/api/chat-web-en',
+  SEND: '/api/send',
 } as const;
 
 export const AI_MODEL_NAMES = {

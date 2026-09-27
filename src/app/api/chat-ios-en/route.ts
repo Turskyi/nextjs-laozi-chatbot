@@ -6,10 +6,18 @@ import { SYSTEM_PROMPT_EN } from '@/lib/ai/prompts';
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { messages } = body;
+    const { messages, pageContext, pageContent } = body;
+
+    let systemPrompt = SYSTEM_PROMPT_EN;
+    if (pageContext) {
+      systemPrompt += `\n\n${pageContext}`;
+      if (pageContent) {
+        systemPrompt += `\n\nManuscript page content:\n${pageContent}`;
+      }
+    }
 
     const finalMessages = [
-      { role: 'system', content: SYSTEM_PROMPT_EN },
+      { role: 'system', content: systemPrompt },
       ...messages
     ];
 

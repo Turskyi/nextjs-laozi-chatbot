@@ -1,9 +1,16 @@
+'use client';
+
 import { cn } from '@/lib/utils';
 import { Message, useChat } from 'ai/react';
-import { Bot, SendHorizontal, Trash, XCircle } from 'lucide-react';
+import { BookOpen, Bot, SendHorizontal, Trash, XCircle } from 'lucide-react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
+import {
+  getManuscriptPage,
+  getManuscriptPageContext,
+} from '@/data/manuscriptData';
 import { API_ENDPOINTS, LOCALES, ROLES } from '../../constants';
 
 interface AIChatBoxProps {
@@ -19,6 +26,13 @@ export default function AIChatBox({
   apiEndpoint = API_ENDPOINTS.CHAT_WEB_EN,
   locale = LOCALES.ENGLISH,
 }: AIChatBoxProps) {
+  const pathname = usePathname();
+  const manuscriptMatch = pathname?.match(/^\/manuscript\/(\d+)$/);
+  const pageNumber = manuscriptMatch ? parseInt(manuscriptMatch[1], 10) : null;
+  const pageData = pageNumber ? getManuscriptPage(pageNumber) : null;
+  const pageContext = pageData ? getManuscriptPageContext(pageData) : null;
+  const pageContent = pageData ? pageData.content : null;
+
   const {
     messages,
     input,
@@ -27,7 +41,14 @@ export default function AIChatBox({
     setMessages,
     isLoading,
     error,
-  } = useChat({ api: apiEndpoint, body: { locale } });
+  } = useChat({
+    api: apiEndpoint,
+    body: {
+      locale,
+      pageContext: pageContext ?? undefined,
+      pageContent: pageContent ?? undefined,
+    },
+  });
 
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -44,7 +65,23 @@ export default function AIChatBox({
     }
   }, [open]);
 
+  useEffect(() => {
+    if (error) {
+      console.error('AIChatBox error:', error);
+    }
+  }, [error]);
+
   const lastMessageIsUser = messages[messages.length - 1]?.role === 'user';
+
+  const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    handleSubmit(e, {
+      body: {
+        locale,
+        pageContext: pageContext ?? undefined,
+        pageContent: pageContent ?? undefined,
+      },
+    });
+  };
 
   return (
     <div
@@ -57,7 +94,13 @@ export default function AIChatBox({
         <XCircle size={30} className="rounded-full bg-background" />
       </button>
       <div className="flex h-[600px] flex-col rounded border bg-background shadow-xl">
-        <div className="mt-3 h-full overflow-y-auto px-3" ref={scrollRef}>
+        {pageContext && (
+          <div className="flex items-center gap-2 border-b border-border bg-primary/10 px-3.5 py-2 text-xs font-medium text-primary rounded-t">
+            <BookOpen size={14} className="flex-none" />
+            <span>{pageContext}</span>
+          </div>
+        )}
+        <div className="flex-1 overflow-y-auto px-3 pt-3" ref={scrollRef}>
           {messages.map((message) => (
             <ChatMessage message={message} key={message.id} />
           ))}
@@ -92,7 +135,7 @@ export default function AIChatBox({
             </div>
           )}
         </div>
-        <form onSubmit={handleSubmit} className="m-3 flex gap-1">
+        <form onSubmit={onFormSubmit} className="m-3 flex gap-1">
           <button
             type="button"
             className="flex w-10 flex-none items-center justify-center"

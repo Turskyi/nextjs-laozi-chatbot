@@ -1,18 +1,15 @@
 'use client';
 import laozi from '@/assets/laozi.png';
-import AIChatBox from '@/components/AIChatBox';
 import { useChatBox } from '@/components/ChatBoxProvider';
 import { H1 } from '@/components/ui/H1';
 import { H2 } from '@/components/ui/H2';
 import { Bot } from 'lucide-react';
-import { Metadata } from 'next';
 import Image from 'next/image';
-import { useState } from 'react';
 
 const CHAT_NAME = 'Laozi Chatbot';
 
 export default function Home() {
-  const { open, setOpen } = useChatBox();
+  const { setOpen } = useChatBox();
   return (
     <>
       <section className="space-y-16 bg-cover bg-center bg-no-repeat px-4 py-12 sm:py-12 lg:py-32 dark:bg-[url('/dark.png')] bg-[url('/background.png')]">
@@ -64,7 +61,6 @@ export default function Home() {
           </p>
         </section>
       </section>
-      <AIChatBox open={open} onClose={() => setOpen(false)} />
     </>
   );
 }

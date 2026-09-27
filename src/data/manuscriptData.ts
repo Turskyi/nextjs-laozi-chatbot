@@ -909,3 +909,14 @@ The copy is dated the 28th day of the 6th month of Tianbao 10 (751 CE), in the T
 export function getManuscriptPage(pageNumber: number): ManuscriptPageData | undefined {
   return MANUSCRIPT_PAGES.find((p) => p.pageNumber === pageNumber);
 }
+
+export function getManuscriptPageContext(page: ManuscriptPageData): string {
+  const manuscriptNames =
+    page.pageNumber >= 7 && page.pageNumber <= 10
+      ? 'Pelliot chinois 2584 and Pelliot chinois 2255'
+      : page.pageNumber >= 11
+        ? 'Pelliot chinois 2255'
+        : 'Pelliot chinois 2584';
+  return `You are discussing manuscript page ${page.pageNumber} (${page.title}), ${manuscriptNames}`;
+}
+

@@ -34,7 +34,7 @@ export async function POST(req: Request) {
     });
   }
 
-  const { locale, messages } = body;
+  const { locale, messages, pageContext, pageContent } = body;
 
   let systemPrompt = SYSTEM_PROMPT_EN;
 
@@ -60,6 +60,13 @@ export async function POST(req: Request) {
       systemPrompt += `\nAnswer in ${languageName || locale}.`;
     } catch (e) {
       systemPrompt += `\nAnswer in the language with code "${locale}".`;
+    }
+  }
+
+  if (pageContext) {
+    systemPrompt += `\n\n${pageContext}`;
+    if (pageContent) {
+      systemPrompt += `\n\nManuscript page content:\n${pageContent}`;
     }
   }
 
