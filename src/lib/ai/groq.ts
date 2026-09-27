@@ -7,7 +7,8 @@ const groq = new Groq({
 export async function getGroqResponse(messages: any[]) {
   return groq.chat.completions.create({
     messages,
-    model: 'llama-3.3-70b-versatile',
+    model: 'qwen/qwen3.8-27b',
+    max_tokens: 800,
     stream: true,
   });
 }

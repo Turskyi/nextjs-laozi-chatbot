@@ -31,7 +31,7 @@ export async function generateChatResponse(messages: any[]) {
     console.error('All AI providers failed:', error);
     return new Response(
       JSON.stringify({ error: 'Service Unavailable' }),
-      { status: 503, headers: { 'Content-Type': 'application/json' } }
+      { status: 503, headers: { 'Content-Type': 'application/json' } },
     );
   }
 }
