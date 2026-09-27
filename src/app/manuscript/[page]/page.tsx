@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 import { getManuscriptPage, MANUSCRIPT_PAGES } from '@/data/manuscriptData';
 import ManuscriptViewer from '@/components/manuscript/ManuscriptViewer';
 
@@ -42,5 +43,9 @@ export default function ManuscriptPage({ params }: ManuscriptPageProps) {
     notFound();
   }
 
-  return <ManuscriptViewer currentPage={pageData} />;
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading manuscript...</div>}>
+      <ManuscriptViewer currentPage={pageData} />
+    </Suspense>
+  );
 }
