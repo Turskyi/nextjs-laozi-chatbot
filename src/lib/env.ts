@@ -5,7 +5,7 @@ const envSchema = zod.object({
   SUPER_ADMIN: zod.string().nonempty(),
   RESEND_API_KEY: zod.string().nonempty(),
   GROQ_API_KEY: zod.string().nonempty(),
-  MISTRAL_API_KEY: zod.string().nonempty(),
+  OPENROUTER_API_KEY: zod.string().nonempty(),
   GEMINI_API_KEY: zod.string().nonempty(),
 });
 

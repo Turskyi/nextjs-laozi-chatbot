@@ -6,6 +6,12 @@ Rule: NEVER COMMIT ANYTHING
 
 Agents, bots, or automated processes MUST NOT create commits, push changes, or add files to the repository without explicit, prior human approval.
 
+Rule: NEVER PREFIX AI MODELS WITH ":free"
+----------------------------------------
+Agents must never use the `:free` suffix on AI model names/slugs (e.g., use
+`deepseek/deepseek-chat`, not `deepseek/deepseek-chat:free`), as adding `:free`
+causes 404 errors on OpenRouter.
+
 Why
 - Prevent accidental leakage of secrets, credentials, or sensitive data.
 - Avoid automated changes that bypass code review and CI policies.

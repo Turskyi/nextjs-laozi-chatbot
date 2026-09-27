@@ -1,6 +1,6 @@
 import { StreamingTextResponse, OpenAIStream, GoogleGenerativeAIStream } from 'ai';
 import { getGroqResponse } from './ai/groq';
-import { getMistralResponse } from './ai/mistral';
+import { getOpenRouterResponse } from './ai/openrouter';
 import { getGeminiResponse } from './ai/gemini';
 
 export async function generateChatResponse(messages: any[]) {
@@ -10,16 +10,16 @@ export async function generateChatResponse(messages: any[]) {
     const stream = OpenAIStream(response);
     return new StreamingTextResponse(stream);
   } catch (error) {
-    console.warn('Groq failed, falling back to Mistral:', error);
+    console.warn('Groq failed, falling back to OpenRouter:', error);
   }
 
-  // 2. Attempt Mistral
+  // 2. Attempt OpenRouter
   try {
-    const response = await getMistralResponse(messages);
+    const response = await getOpenRouterResponse(messages);
     const stream = OpenAIStream(response as any);
     return new StreamingTextResponse(stream);
   } catch (error) {
-    console.warn('Mistral failed, falling back to Gemini:', error);
+    console.warn('OpenRouter failed, falling back to Gemini:', error);
   }
 
   // 3. Attempt Gemini
