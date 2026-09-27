@@ -35,12 +35,16 @@ export const API_ENDPOINTS = {
 export const AI_MODEL_NAMES = {
   GROQ: 'qwen/qwen3.8-27b',
   OPENROUTER: 'deepseek/deepseek-chat',
-  MISTRAL: 'mistral-small-latest',
+  //  We take the first model with highest limit under the tokens per minute
+  // sorting at https://admin.mistral.ai/plateforme/limits, skipping the
+  // "embed", because it is not suitable for chats and skipping the "labs"
+  // model, because it is for testing.
+  MISTRAL: 'ministral-3b-2512',
   GEMINI: 'gemini-3.5-flash-lite',
   GEMINI_EMBEDDING: 'gemini-embedding-001',
 } as const;
 
-export type AIModelName = typeof AI_MODEL_NAMES[keyof typeof AI_MODEL_NAMES];
+export type AIModelName = (typeof AI_MODEL_NAMES)[keyof typeof AI_MODEL_NAMES];
 
 export const ROLES = {
   USER: 'user',
