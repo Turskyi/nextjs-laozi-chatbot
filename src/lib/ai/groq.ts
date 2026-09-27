@@ -7,7 +7,7 @@ const groq = new Groq({
 export async function getGroqResponse(messages: any[]) {
   return groq.chat.completions.create({
     messages,
-    model: 'qwen/qwen3.6-27b',
+    model: 'llama-3.3-70b-versatile',
     stream: true,
   });
 }
