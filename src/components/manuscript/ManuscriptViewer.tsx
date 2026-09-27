@@ -370,7 +370,9 @@ export default function ManuscriptViewer({ currentPage }: ManuscriptViewerProps)
                       </div>
                     )}
                     {currentPage.content.split('\n\n').map((paragraph, idx) => {
-                      const isChapterHeading = /^Chapter\s+\d+/i.test(paragraph.trim());
+                      const isChapterHeading = /^(Chapter\s+\d+|Closing colophon)$/i.test(
+                        paragraph.trim(),
+                      );
                       return (
                         <p
                           key={idx}
@@ -492,7 +494,9 @@ export default function ManuscriptViewer({ currentPage }: ManuscriptViewerProps)
                     </div>
                   )}
                   {currentPage.content.split('\n\n').map((paragraph, idx) => {
-                    const isChapterHeading = /^Chapter\s+\d+/i.test(paragraph.trim());
+                    const isChapterHeading = /^(Chapter\s+\d+|Closing colophon)$/i.test(
+                      paragraph.trim(),
+                    );
                     return (
                       <p
                         key={idx}
