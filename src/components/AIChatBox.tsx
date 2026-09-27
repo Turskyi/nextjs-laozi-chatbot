@@ -5,7 +5,7 @@ import { Message, useChat } from 'ai/react';
 import { BookOpen, Bot, SendHorizontal, Trash, XCircle } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import {
   getManuscriptPage,
@@ -33,6 +33,9 @@ export default function AIChatBox({
   const pageContext = pageData ? getManuscriptPageContext(pageData) : null;
   const pageContent = pageData ? pageData.content : null;
 
+  const [messageModels, setMessageModels] = useState<Record<string, string>>({});
+  const latestModelRef = useRef<string | null>(null);
+
   const {
     messages,
     input,
@@ -47,6 +50,24 @@ export default function AIChatBox({
       locale,
       pageContext: pageContext ?? undefined,
       pageContent: pageContent ?? undefined,
+    },
+    onResponse(response) {
+      const model = response.headers.get('X-AI-Model');
+      if (model) {
+        latestModelRef.current = model;
+        setMessages((prev) => {
+          const last = prev[prev.length - 1];
+          if (last && last.role === ROLES.ASSISTANT) {
+            setMessageModels((models) => ({ ...models, [last.id]: model }));
+          }
+          return prev;
+        });
+      }
+    },
+    onFinish(message) {
+      if (latestModelRef.current) {
+        setMessageModels((models) => ({ ...models, [message.id]: latestModelRef.current! }));
+      }
     },
   });
 
@@ -101,9 +122,17 @@ export default function AIChatBox({
           </div>
         )}
         <div className="flex-1 overflow-y-auto px-3 pt-3" ref={scrollRef}>
-          {messages.map((message) => (
-            <ChatMessage message={message} key={message.id} />
-          ))}
+          {messages.map((message) => {
+            const isLastAssistant = message.role === ROLES.ASSISTANT && message === messages[messages.length - 1];
+            const resolvedModel = messageModels[message.id] || (isLastAssistant ? latestModelRef.current : undefined);
+            return (
+              <ChatMessage
+                message={message}
+                key={message.id}
+                model={resolvedModel ?? undefined}
+              />
+            );
+          })}
           {isLoading && lastMessageIsUser && (
             <ChatMessage
               message={{
@@ -167,9 +196,10 @@ export default function AIChatBox({
 
 interface ChatMessageProps {
   message: Message;
+  model?: string;
 }
 
-function ChatMessage({ message: { role, content } }: ChatMessageProps) {
+function ChatMessage({ message: { role, content }, model }: ChatMessageProps) {
   const isAiMessage = role === ROLES.ASSISTANT;
 
   return (
@@ -209,6 +239,11 @@ function ChatMessage({ message: { role, content } }: ChatMessageProps) {
         >
           {content}
         </ReactMarkdown>
+        {isAiMessage && model && (
+          <div className="mt-2 pt-1.5 border-t border-border/30 text-[10px] text-muted-foreground/60 font-mono tracking-wide flex items-center justify-end">
+            <span>{model}</span>
+          </div>
+        )}
       </div>
     </div>
   );
