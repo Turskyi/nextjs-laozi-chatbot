@@ -108,7 +108,7 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
             ) : (
               <div className="py-12 text-center space-y-2">
                 <Search className="h-12 w-12 text-muted-foreground mx-auto opacity-20" />
-                <p className="text-muted-foreground">No matches found for "{query}"</p>
+                <p className="text-muted-foreground">No matches found for &quot;{query}&quot;</p>
               </div>
             )
           ) : (
