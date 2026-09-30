@@ -1,13 +1,44 @@
+/**
+ * @file Chat API Route
+ * @see {@link https://github.com/codinginflow/nextjs-langchain-portfolio/blob/Final-Project/src/app/api/chat/route.ts | Original Inspiration (Coding in Flow Next.js LangChain Portfolio)}
+ *
+ * Architectural Note on LangChain vs. Direct SDKs & Vercel AI SDK:
+ *
+ * Although the original tutorial implementation utilized LangChain, this
+ * codebase evolved to bypass LangChain in favor of direct provider SDKs
+ * (Groq, OpenRouter, Mistral, Gemini) combined with the Vercel AI SDK (`ai`).
+ *
+ * Why we do not use LangChain here and why it is better for this application:
+ * 1. **Robust Multi-Provider Fallback**: Our app implements an intelligent
+ *    multi-provider fallback strategy
+ *    (Groq -> OpenRouter -> Mistral -> Gemini).
+ *    LangChain's abstractions and chain runnables make multi-vendor fallback
+ *    routing and custom error handling across different third-party APIs
+ *    unnecessarily complex and rigid.
+ * 2. **Performance & Bundle Overhead**: LangChain introduces a heavy
+ *    abstraction layer and dependency footprint
+ *    (requiring strict version overrides like `@langchain/core`).
+ *    Direct SDK usage keeps the runtime lightweight, reduces cold start times,
+ *    and avoids version mismatch issues.
+ * 3. **Flexibility & Direct Control**: Direct manipulation of message arrays
+ *    (system prompts, localized language handling, dynamic page context
+ *    insertion) and seamless integration with Vercel AI SDK streaming utilities
+ *    (`OpenAIStream`, `GoogleGenerativeAIStream`) provide fine-grained,
+ *    transparent control over API requests and streaming headers
+ *    (`X-AI-Model`) without framework lock-in.
+ */
 export const runtime = 'nodejs';
 export const maxDuration = 60;
 export const dynamic = 'force-dynamic';
 export const preferredRegion = 'auto';
 
-import {
-  LOCALES,
-} from '../../../../constants';
+import { LOCALES } from '../../../../constants';
 import { generateChatResponse } from '@/lib/ai';
-import { SYSTEM_PROMPT_EN, SYSTEM_PROMPT_LV, SYSTEM_PROMPT_UA } from '@/lib/ai/prompts';
+import {
+  SYSTEM_PROMPT_EN,
+  SYSTEM_PROMPT_LV,
+  SYSTEM_PROMPT_UA,
+} from '@/lib/ai/prompts';
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -72,7 +103,7 @@ export async function POST(req: Request) {
 
   const finalMessages = [
     { role: 'system', content: systemPrompt },
-    ...messages
+    ...messages,
   ];
 
   const response = await generateChatResponse(finalMessages);
