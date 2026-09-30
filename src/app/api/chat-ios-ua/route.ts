@@ -23,7 +23,10 @@ export async function POST(req: Request) {
       ...messages
     ];
 
-    return await generateChatResponse(finalMessages);
+    return await generateChatResponse(finalMessages, {
+      locale: 'ua',
+      pageContext,
+    });
   } catch (error) {
     console.error('An unexpected error occurred:', error);
     return Response.json(

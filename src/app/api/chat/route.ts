@@ -40,6 +40,8 @@ import {
   SYSTEM_PROMPT_UA,
 } from '@/lib/ai/prompts';
 
+const DEBUG = process.env.NODE_ENV === 'development';
+
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
@@ -66,6 +68,9 @@ export async function POST(req: Request) {
   }
 
   const { locale, messages, pageContext, pageContent } = body;
+  if (DEBUG) {
+    console.log('[ROUTE LOG /api/chat] Incoming request. Message count:', messages?.length, 'Locale:', locale, 'pageContext:', pageContext);
+  }
 
   let systemPrompt = SYSTEM_PROMPT_EN;
 
@@ -106,7 +111,10 @@ export async function POST(req: Request) {
     ...messages,
   ];
 
-  const response = await generateChatResponse(finalMessages);
+  const response = await generateChatResponse(finalMessages, {
+    locale,
+    pageContext,
+  });
 
   // Apply CORS headers to the response
   Object.entries(CORS_HEADERS).forEach(([key, value]) => {

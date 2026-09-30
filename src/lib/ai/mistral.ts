@@ -5,17 +5,27 @@ const mistral = new Mistral({
   apiKey: process.env.MISTRAL_API_KEY,
 });
 
-export async function getMistralResponse(messages: any[]) {
+export async function getMistralResponse(
+  messages: any[],
+  callbacks?: { onCompletion?: (completion: string) => Promise<void> | void },
+) {
   const stream = await mistral.chat.stream({
     model: AI_MODEL_NAMES.MISTRAL,
     messages,
   });
+
+  let fullText = '';
 
   // Convert the Mistral SDK stream into a standard Response-like object
   // that the AI SDK can recognize and parse.
   const readableStream = new ReadableStream({
     async start(controller) {
       for await (const chunk of stream) {
+        const deltaContent = chunk.data?.choices?.[0]?.delta?.content;
+        if (deltaContent) {
+          fullText += deltaContent;
+        }
+
         // Map Mistral chunk to a standard AI stream chunk format
         const standardChunk = {
           id: (chunk as any).data?.id,
@@ -36,6 +46,14 @@ export async function getMistralResponse(messages: any[]) {
       }
       controller.enqueue(new TextEncoder().encode('data: [DONE]\n\n'));
       controller.close();
+
+      if (callbacks?.onCompletion && fullText) {
+        try {
+          await callbacks.onCompletion(fullText);
+        } catch (err) {
+          console.warn('Mistral onCompletion error:', err);
+        }
+      }
     },
   });
 

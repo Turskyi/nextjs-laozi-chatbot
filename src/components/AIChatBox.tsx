@@ -53,18 +53,21 @@ export default function AIChatBox({
     },
     onResponse(response) {
       const model = response.headers.get('X-AI-Model');
+      const cacheHeader = response.headers.get('X-Cache');
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`[CLIENT LOG] onResponse received. Status: ${response.status}. X-AI-Model: "${model}". X-Cache: "${cacheHeader}". OK: ${response.ok}`);
+      }
       if (model) {
         latestModelRef.current = model;
-        setMessages((prev) => {
-          const last = prev[prev.length - 1];
-          if (last && last.role === ROLES.ASSISTANT) {
-            setMessageModels((models) => ({ ...models, [last.id]: model }));
-          }
-          return prev;
-        });
       }
     },
+    onError(err) {
+      console.error('[CLIENT LOG] onError in useChat:', err);
+    },
     onFinish(message) {
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`[CLIENT LOG] onFinish fired. Message ID: "${message.id}". Content length: ${message.content.length}`);
+      }
       if (latestModelRef.current) {
         setMessageModels((models) => ({ ...models, [message.id]: latestModelRef.current! }));
       }

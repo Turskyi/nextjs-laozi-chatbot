@@ -21,7 +21,10 @@ export async function POST(req: Request) {
       ...messages
     ];
 
-    return await generateChatResponse(finalMessages);
+    return await generateChatResponse(finalMessages, {
+      locale: 'en',
+      pageContext,
+    });
   } catch (error) {
     console.error('Error in chat-android-en route:', error);
     return Response.json(

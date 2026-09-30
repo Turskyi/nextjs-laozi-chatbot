@@ -34,7 +34,10 @@ export async function POST(req: Request) {
       ...messages
     ];
 
-    const response = await generateChatResponse(finalMessages);
+    const response = await generateChatResponse(finalMessages, {
+      locale: 'ua',
+      pageContext,
+    });
 
     Object.entries(CORS_HEADERS).forEach(([key, value]) => {
       response.headers.set(key, value);
