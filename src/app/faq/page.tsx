@@ -43,30 +43,32 @@ export default function FAQPage() {
         </p>
       </section>
 
-      <section>
+
+      <section className="mt-12">
         <h2 className="text-2xl font-semibold mb-4">
-          Why are chapter numbers inconsistent?
+          Why do the manuscripts never say &apos;Tao Te Ching&apos;?
         </h2>
         <p className="mb-4">
-          The inconsistencies in chapter numbering arise because the AI draws on
-          multiple sources for the Tao Te Ching, each with its own way of
-          dividing and numbering the text. Different translations and editions
-          sometimes group verses differently or assign varying numbers to
-          chapters.
+          &quot;Tao Te Ching&quot; and &quot;Daodejing&quot; are the same book and
+          the same Chinese characters (道德經). The difference is only the
+          romanization system: &quot;Tao Te Ching&quot; is the older Wade-Giles
+          spelling long used in the West, while &quot;Daodejing&quot; is modern
+          Hanyu Pinyin (where Tao = Dao, meaning the Way; Te = De, meaning
+          virtue; and Ching = Jing, meaning classic).
         </p>
         <p className="mb-4">
-          While it might seem logical to restrict the AI to a single,
-          authoritative “source of truth,” at this stage we’ve found it more
-          beneficial to allow flexibility. Drawing from multiple translations
-          and commentaries helps the AI form more nuanced and expanded answers
-          that reflect the richness and diversity of Daoist thought.
+          The Dunhuang manuscripts never use the combined title &quot;Tao Te
+          Ching&quot; or &quot;Daodejing&quot;. They name the two parts separately,
+          attributed to Laozi: 老子道經上 (&quot;Laozi&apos;s Daojing - Upper
+          Part&quot;) and 老子德經下 (&quot;Laozi&apos;s Dejing - Lower Part&quot;).
+          The combined title 道德經, literally &quot;Classic of Dao and De&quot;,
+          is a later editorial convention for the two parts bound as one book.
         </p>
         <p>
-          This approach may introduce occasional inconsistencies in chapter
-          numbering, but so far it seems to enhance the overall quality and
-          depth of responses. Unless we find that this variety causes more
-          confusion than clarity, we’ll continue to let the AI explore wisdom
-          from more than one source.
+          So when the site greeting says &quot;Tao Te Ching&quot; and the
+          manuscript notes say &quot;Daodejing&quot;, both mean the same text,
+          and the English translation matches the manuscript content chapter
+          by chapter—only the title naming differs.
         </p>
       </section>
 
