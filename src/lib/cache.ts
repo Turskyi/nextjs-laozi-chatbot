@@ -1,5 +1,4 @@
 import { Redis } from '@upstash/redis';
-import crypto from 'crypto';
 
 const DEBUG = process.env.NODE_ENV === 'development';
 
@@ -31,8 +30,8 @@ function getRedis(): Redis | null {
 }
 
 /**
- * Generates a deterministic SHA-256 cache key based on the last user message,
- * locale, and pageContext.
+ * Generates a deterministic cache key based on the last user message,
+ * locale, and pageContext. Compatible with both Node.js and Edge runtimes.
  */
 export function getCacheKey(
   messages: any[],
@@ -46,8 +45,16 @@ export function getCacheKey(
   const pagePart = pageContext ? pageContext.toLowerCase().trim() : 'global';
 
   const rawKey = `${localePart}:${pagePart}:${normalizedText}`;
-  const hash = crypto.createHash('sha256').update(rawKey).digest('hex');
-  return `chat:cache:${hash}`;
+
+  // Fast deterministic hash compatible with Edge runtime (no Node 'crypto' module)
+  let hash = 0;
+  for (let i = 0; i < rawKey.length; i++) {
+    const char = rawKey.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash |= 0;
+  }
+  const hexHash = Math.abs(hash).toString(16);
+  return `chat:cache:${localePart}:${hexHash}`;
 }
 
 /**
